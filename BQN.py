@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     testing={
         'BQN'  :0,
-        'BQNfn':1,
+        'BQNfn':0,
     }
 
     if testing['BQN']:
