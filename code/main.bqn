@@ -1,4 +1,4 @@
-fnsImport←"fns←•Import ""/home/brian/personal/code/py/spaghettiWithBacon/fns.bqn"","
+fnsImport⇐"fns←•Import """∾•path∾"/fns.bqn"","
 
 Main ←{
     "dfn" 𝕊 𝕩:

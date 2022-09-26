@@ -1,0 +1,40 @@
+Intermediary type (mediary for short) means converting any type from both BQN and python to a list of strings
+where first string shows types of the elements, and the rest of the strings are string representations of each element
+
+
+Convert from python to the intermediary type (list of strings)
+Convert from intermediary type to BQN
+Convert from BQN to intermediary type
+Convert from intermediary type to python again
+
+converting from intermediary type:
+    solving the types:
+        grouping intigers  BQN ✓  python 𝕩
+        grouping arrays    BQN ✓  python 𝕩
+    
+    Mapping types to proper elements in each language:
+        BQN ✓  python 𝕩
+
+converting to intermediary type:
+    solving the types:
+        grouping intigers  BQN 𝕩  python 𝕩
+        grouping arrays    BQN 𝕩  python 𝕩
+    
+    Mapping types to proper elements in each language:
+        BQN 𝕩  python 𝕩
+
+
+
+Types that work already without intermediary type:
+    str, list[str] ✓
+    numpy/BQN arrays, python iterable[any], intigers 𝕩
+
+
+
+BQN:
+    CollapseInts in .bqn can be massively simplified
+
+
+Python:
+    the character class needs to be more fleshed out.
+    i think it should be a character array type instead of just a character type.

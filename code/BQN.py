@@ -2,7 +2,7 @@ import subprocess
 from typing import Callable, Iterable, Union
 
 def BQN(*args:str):
-    process = subprocess.Popen(["BQN","main.bqn",*args], stdout=subprocess.PIPE,text=1)
+    process = subprocess.Popen(["BQN","/home/brian/personal/code/py/spaghettiWithBacon/code/main.bqn",*args], stdout=subprocess.PIPE,text=1)
     output, error = process.communicate()
     if error:
         raise Exception(error)
