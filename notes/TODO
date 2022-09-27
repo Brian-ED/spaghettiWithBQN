@@ -9,8 +9,8 @@ Convert from intermediary type to python again
 
 converting from intermediary type:
     solving the types:
-        grouping intigers  BQN ✓  python 𝕩
-        grouping arrays    BQN ✓  python 𝕩
+        grouping intigers  BQN ✓  python ✓
+        grouping arrays    BQN ✓  python ✓
     
     Mapping types to proper elements in each language:
         BQN ✓  python 𝕩

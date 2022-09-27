@@ -18,7 +18,7 @@ mediaryLang ⇐{
             lenOfArg‿listLen←PrefixedInteger types
             { 𝕊 done‿types:
                 lenOfArg‿listLen←PrefixedInteger types
-                ⟨(listLen⊸∾⌾(⊑⌽)done),lenOfArg↓types⟩
+                ⟨(∾⟜listLen⌾(⊑⌽)done),lenOfArg↓types⟩
             } _While_ {' '≡⊑1⊑𝕩} ⟨done∾⟨⟨listLen⟩⟩,lenOfArg↓types⟩;
 
         𝕊 done‿types:
@@ -51,5 +51,5 @@ mediaryLang ⇐{
 }
 
 {𝕊:
-•Show mediaryLang.Handler ⟨"l3l4 3ccccccccccccl3 2nnnnnnl5ccl3sl2nnnnn","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","3"⟩
+•Show mediaryLang.Handler ⟨"l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnn","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","3"⟩
 }⍟0 0 #testing on or off
