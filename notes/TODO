@@ -7,13 +7,14 @@ Convert from intermediary type to BQN
 Convert from BQN to intermediary type
 Convert from intermediary type to python again
 
-converting from intermediary type:
-    solving the types:
+
+✓✓ converting from intermediary type:
+    ✓✓ solving the types:
         grouping intigers  BQN ✓  python ✓
         grouping arrays    BQN ✓  python ✓
     
-    Mapping types to proper elements in each language:
-        BQN ✓  python 𝕩
+    ✓✓ Mapping types to proper elements in each language:
+        BQN ✓  python ✓ 
 
 converting to intermediary type:
     solving the types:
@@ -33,8 +34,3 @@ Types that work already without intermediary type:
 
 BQN:
     CollapseInts in .bqn can be massively simplified
-
-
-Python:
-    the character class needs to be more fleshed out.
-    i think it should be a character array type instead of just a character type.
