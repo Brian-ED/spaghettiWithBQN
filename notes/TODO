@@ -7,4 +7,5 @@ BQN:
 
 Python:
     Make numpy arrays work better.
-    add type safety and custom errors for them.
+    Add type safety and custom errors for them.
+    Add more test cases
