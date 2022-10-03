@@ -14,14 +14,17 @@ Convert from intermediary type to python again
         grouping arrays    BQN ✓  python ✓
     
     ✓✓ Mapping types to proper elements in each language:
-        BQN ✓  python ✓ 
+        BQN ✓  python ✓
 
 converting to intermediary type:
     solving the types:
-        grouping intigers  BQN 𝕩  python 𝕩
-        grouping arrays    BQN 𝕩  python 𝕩
-    
+        grouping intigers  BQN ✓  python 𝕩
+        grouping arrays    BQN ✓  python 𝕩
+
     Mapping types to proper elements in each language:
+        BQN ✓  python ✓
+
+    Add a check for if the intermediary type is correct:
         BQN 𝕩  python 𝕩
 
 
@@ -30,7 +33,7 @@ Types that work already without intermediary type:
     str, list[str] ✓
     numpy/BQN arrays, python iterable[any], intigers 𝕩
 
-
-
 BQN:
     CollapseInts in .bqn can be massively simplified
+
+Figure out how to get input from STDOUT and convert it to mediarylang

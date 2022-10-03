@@ -1,20 +1,21 @@
 fnsImport⇐"fns←•Import """∾•path∾"/fns.bqn"","
 
+f←•Import "fns.bqn"
+
 Main ←{
-    "dfn" 𝕊 𝕩:
-        (•BQN fnsImport∾⊑𝕩){𝕎𝕩}1⊑𝕩;
-    "dfn strlist" 𝕊 𝕩:
-        (•BQN fnsImport∾⊑𝕩){𝕎𝕩}1↓𝕩
+    fn 𝕊 args:
+        repl←•ReBQN {repl⇐"strict",system⇐⟨f⟩}
+        func←Repl fn
+        Func{1=≠𝕩?𝔽⊑𝕩;"Function got more than 2 arguments"!2=≠𝕩?𝔽´⌽𝕩}⌾f.mediaryLang.Handler args
 }
 
-{
-    type ←⊑𝕩
+EvalFn←{
+    fn ←⊑𝕩
     args ←1↓𝕩
-    
-    {
-        ∨´2=⥊ •Type¨𝕩 ? 
-            •Out 𝕩;
-            •Show 𝕩
-    } type Main args 
 
-}⍟{⟨⟩≢𝕩} •args
+    f.ToPyTuple fn Main args 
+}
+
+# •Show EvalFn "{2/𝕩}"‿"cnn"‿"a"‿"1"‿"2" 
+
+•Out EvalFn⍟(⟨⟩⊸≢) •args

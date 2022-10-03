@@ -3,8 +3,7 @@ x=(
     np.reshape([*map(char,("t","h","i","s","i","s"," ","a","t","e","s","t"))],(3,4)),
     np.array((
      (1,2),
-     (3,4),["l3l3 4ccccccccccccl3 2nnnnnnl5ccl3sl2nnnnn","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","3"]
-
+     (3,4),
      (5,6))
     ),
     ('a','b',("nested",(3,2),1),2,3)
@@ -30,11 +29,12 @@ each letter represents a type:
 [
 'l'‿"array" # any number following l is array length
 'n'‿"number"
-'s'‿"string" # string are treated as list of char. still handled diffrently.
+'s'‿"DEPRECATED, string" # string are treated as list of char. still handled diffrently.
 'S'‿"extended string" # made for handling string limit by sh
 'c'‿"character"
 'f'‿"BQN variable" 
 'F'‿"Python function" # also means 1-modifier, 2-modifier, and namespace
 ' '‿"number seperator for higher dimensional arrays"
 'E'‿"reserved for extending the first string to more (that string being the types)" # not implemented
+'X'‿"Split here"
 ]

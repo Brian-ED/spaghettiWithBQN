@@ -1,14 +1,14 @@
-from functools import reduce
 from math import prod
 import subprocess
-from time import sleep
-from typing import Callable, Iterable, Union
+from typing import Callable, Union
 import numpy as np
+
+pathToFile='/'+'/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
 
 class char:
     def __init__(self,character):
         if len(character)!=1:
-            raise Exception("Invalid length for character")
+            raise Exception(f'Invalid length for character: "{character}"')
         self.character=character
 
     def __str__(self) -> str:
@@ -20,36 +20,24 @@ class char:
 def charArrToStr(x):
     return ''.join(map(str,np.ravel(x)))
 
+def Print(x):
+    print(x)
+    return x
 
 def BQN(*args:str):
-    process = subprocess.Popen(["BQN","/home/brian/personal/code/py/spaghettiWithBacon/code/main.bqn",*args], stdout=subprocess.PIPE,text=1)
+    process = subprocess.Popen(["BQN",pathToFile+"main.bqn",*args], stdout=subprocess.PIPE,text=1)
     output, error = process.communicate()
-    if error:
-        raise Exception(error)
-    return output
+    if error: raise Exception(error)
+    return Handler(eval(output))
 
 def BQNfn(bqnFunc:str)->Callable:
-    """
-    The returned function only supports input of type:
-        str
-        Iterable[str] 
-    """
+    return lambda x,y=None:BQN(bqnFunc,*PyToMediary((x,y))) if y!=None else BQN(bqnFunc,*PyToMediary((x,)))
 
-    def f(x:Union[str,Iterable[str]])->str:
-        if type(x)==str:
-            typeOfInput='dfn'
-        elif all(isinstance(i,str) for i in x):
-            typeOfInput='dfn strlist'
-        else:
-            raise Exception("Type was not recognized in BQN function:\n"+bqnFunc)
-
-        return BQN(typeOfInput,bqnFunc,*([x] if type(x)==str else x))
-    return f
-
-def BQNEval():
-    """
-    Used for straightup evaluating BQN, no fuss.
-    """
+def BQNEval(arg:str):
+    process = subprocess.Popen(["BQN",pathToFile+"main.bqn",arg], stdout=subprocess.PIPE,text=1)
+    output, error = process.communicate()
+    if error: raise Exception(error)
+    return Handler(eval(output))
 
 def PrefixedInteger(types:str) -> tuple[int,int]:
     x=1
@@ -91,51 +79,76 @@ def SmartReshape(x,shape):
 def GroupTypes(t:list[Union[str,list[int]]],args:list[str]):
     types=list(t)
     done=[]
-    funcMap={'n':int,'s':str,'c':char,'f':BQNEval,'F':eval}
-    while types!=[]:
-        if type(types[0])==list:
-            done=[SmartReshape(done,types[0])]+done[prod(types[0]):]
-            types=types[1:]
+    funcMap={'n':int,'s':str,'c':char,'f':BQNfn,'F':eval}
+    for i in types:
+        if type(i)==list:
+            done=[SmartReshape(done,i)]+done[prod(i):]
         else:
-            done=[funcMap[types[0]](args[0])]+done
-            args,types=args[1:],types[1:]
-    return tuple(done)
+            done=[funcMap[i](args[0])]+done
+            args=args[1:]
+    return done[0]
 
 def Handler(allArgs:list[str]):
     types=allArgs[0]
     args=allArgs[1:]
     return GroupTypes(CollapseInts(types)[::-1],args[::-1])
 
-
-print(Handler(["l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","s",'u','m']))
-
+def PyToMediary(x):
+    types=""
+    args=()
+    scalers={str:'s',char:'c',int:'n',np.int64:'n'}
+    while len(x)>0:
+        t=type(x[0])
+        if t in scalers:
+            types+=scalers[t]
+            args+=x[0],
+            x=x[1:]
+        elif t in{tuple,list}:
+            types+='l'+str(len(x[0]))
+            x=*x[0],*x[1:]
+        else: # assuming last type is numpy array, just for now
+            types+='l'+' '.join(map(str,np.shape(x[0])))
+            x=tuple(np.ravel(x[0]))+x[1:]
+    return types,*map(str,args)
 
 if __name__ == "__main__":
+    x=((
+        np.reshape([*map(char,("t","h","i","s","i","s"," ","a","t","e","s","t"))],(3,4)),
+        np.array((
+         (1,2),
+         (3,4),
+         (5,6))
+        ),
+        (char('a'),char('b'),("nested",(3,2),1),2,3)
+    ),)
+    y="l3l3 4ccccccccccccl3 2nnnnnnl5ccl3sl2nnnnn","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","3"
 
     testing={
         'BQN'               :0,
-        'BQNfn'             :0,
+        'BQNfn'             :1,
         'PrefixedInteger'   :0,
-        'CollapseInts'      :0
+        'CollapseInts'      :0,
+        'Handler'           :0,
+        'PyToMediary'       :0
     }
 
     if testing['BQN']:
         # Nest\edli'"stofstrings
-        print(BQN('dfn strlist','fns.Join','Nest\\ed','li\'\"st','of','strings'))
+        print("Strings joined: ",BQN('∾´','l4ssss','Nest\\ed','li\'\"st','of','strings'))
 
     if testing['BQNfn']:
+        print(BQNfn("∾")((1,2,3),(2,3,4)))
 
-        # ⟨ 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 ⟩
-        spaces=BQNfn("{' '=𝕩}")
-        print('where are spaces?: ',spaces('something a dwa'))
+        equal=BQNfn("=")
+        print('where are spaces?: ',equal(char(' '),'something a dwa'))
 
-        # 2
-        mean=BQNfn("fns.Mean")
-        print("What's the mean?: ",mean('⟨1,2,3⟩'))
+        mean=BQNfn("+´÷≠")
+        print("What's the mean?: ",mean((1,2,3)))
 
-        # Nest\edli'"stofstrings
-        join=BQNfn('fns.Join')
+        join=BQNfn('∾´')
         print("Strings joined: ",join(['Nest\\ed','li\'\"st','of','strings']))
+
+
     
     if testing['PrefixedInteger']:
         # (3,11)
@@ -144,3 +157,11 @@ if __name__ == "__main__":
     if testing['CollapseInts']:
         # ['s', [3, 3, 3], 's', 's', [2], 'n', 'n', 'n', 'n']
         print(CollapseInts("sl3 3 3ssl2nnnn"))
+
+    if testing['Handler']:
+        print(Handler(["l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","s",'u','m']))
+    
+    if testing["PyToMediary"]:
+        æ=PyToMediary(x)
+        print("PyToMediary result: ",æ)
+        print("Intended output?: ",y==æ)
