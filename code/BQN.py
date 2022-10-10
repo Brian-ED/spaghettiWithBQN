@@ -1,10 +1,10 @@
-from math import prod
 import subprocess
 from typing import Callable, Union
 import numpy as np
-
+prod=lambda x,z=1:[z:=z*i for i in x][-1]
 pathToFile='/'+'/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
-
+import sys
+print("In module products sys.path[0], __package__ ==", sys.path[0], __package__)
 class char:
     def __init__(self,character):
         if len(character)!=1:
@@ -15,7 +15,7 @@ class char:
         return self.character
 
     def __repr__(self) -> str:
-        return "char('"+self.character+"')"
+        return f"char('{self.character}')"
 
 def charArrToStr(x):
     return ''.join(map(str,np.ravel(x)))
@@ -79,7 +79,7 @@ def SmartReshape(x,shape):
 def GroupTypes(t:list[Union[str,list[int]]],args:list[str]):
     types=list(t)
     done=[]
-    funcMap={'n':int,'s':str,'c':char,'f':BQNfn,'F':eval}
+    funcMap={'n':float,'s':str,'c':char,'f':BQNfn,'F':eval}
     for i in types:
         if type(i)==list:
             done=[SmartReshape(done,i)]+done[prod(i):]
@@ -103,12 +103,17 @@ def PyToMediary(x):
             types+=scalers[t]
             args+=x[0],
             x=x[1:]
+        elif t==bool:
+            types+='n'
+            args+=int(x[0]),
+            x=x[1:]
         elif t in{tuple,list}:
             types+='l'+str(len(x[0]))
             x=*x[0],*x[1:]
-        else: # assuming last type is numpy array, just for now
+        elif t==np.ndarray:
             types+='l'+' '.join(map(str,np.shape(x[0])))
             x=tuple(np.ravel(x[0]))+x[1:]
+        else: raise Exception("Type not recognized by BQN")
     return types,*map(str,args)
 
 if __name__ == "__main__":

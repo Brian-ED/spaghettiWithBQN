@@ -1,5 +1,3 @@
-fnsImport⇐"fns←•Import """∾•path∾"/fns.bqn"","
-
 f←•Import "fns.bqn"
 
 Main ←{
@@ -15,7 +13,5 @@ EvalFn←{
 
     f.ToPyTuple fn Main args 
 }
-
-# •Show EvalFn "{2/𝕩}"‿"cnn"‿"a"‿"1"‿"2" 
 
 •Out EvalFn⍟(⟨⟩⊸≢) •args

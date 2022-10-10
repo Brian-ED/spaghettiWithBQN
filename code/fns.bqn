@@ -4,12 +4,11 @@ _While_ ⇐{𝔽⍟𝔾∘𝔽_𝕣_𝔾∘𝔽⍟𝔾𝕩}
 ToInt ⇐10⊸×⊸+˜´∘⌽-⟜'0'
 StartsWith ⇐ ≤○≠◶0‿(⊣≡≠⊸↑)˜
 Print ⇐⊢⊣  (•path∾"/../out.txt") •FChars •Repr
-Print "hello"
 IsString ⇐{1==𝕩?∧´2=•Type¨𝕩;0}
 ToPyTuple ⇐{'['∾']'«∾´'"'{','∾𝕨∾˜𝕨∾∾´"\\"¨⌾(('\'≡¨𝕩)⊸/)"\"""¨⌾((𝕨≡¨𝕩)⊸/)𝕩}¨⥊¨𝕩}
 
 mediaryLang ⇐{
-    # 𝕩 ≡≡≡ types
+    # 𝕩 ≡≡≡ tqypes
     PrefixedInteger ⇐⊢(⊢∾⟜ToInt 1↓↑˜)1+⟜(+´∧`)1↓∊⟜('0'+↕10)
 
     pyEval ⇐<"notDefined"
@@ -22,7 +21,7 @@ mediaryLang ⇐{
             lenOfArg‿listLen←PrefixedInteger types
             ⌽⌾(⊑⌽∘⊑){ 𝕊 done‿types:
                 lenOfArg‿listLen←PrefixedInteger types
-                ⟨(listLen⊸∾⌾(⊑⌽)done),lenOfArg↓types⟩
+                ⟨listLen⊸∾⌾(⊑⌽)done ,lenOfArg↓types⟩
             } _While_ {' '≡⊑1⊑𝕩}⍟(0=⟜≠1⟜⊑) Print ⟨done∾⟨⟨listLen⟩⟩,lenOfArg↓types⟩;
         𝕊 done‿types:
             (1⊸↓⋈˜done∾⊑)types
@@ -60,15 +59,16 @@ mediaryLang ⇐{
 
     Handler ⇐{
         𝕊⁼: (ExtractTypes <⊸∾ Crunch) 𝕩;
+        𝕊:
+            types ←⊑𝕩
+            args ←1↓𝕩
 
-        types ←⊑𝕩
-        args ←1↓𝕩
+            intStrTypes ←⊑ CollapseInts ⟨⟩‿types
 
-        intStrTypes ←⊑ CollapseInts ⟨⟩‿types
-
-        1⊑ GroupTypes ⌽¨args‿⟨⟩‿intStrTypes
+            1⊑ GroupTypes ⌽¨args‿⟨⟩‿intStrTypes
     }
 }
+
 {𝕊:
 •Show mediaryLang.Handler⁼ •Show mediaryLang.Handler ⟨"l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnn","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","3"⟩
-}⍟0@ #testing on or off
+}⍟1@ #testing on or off
