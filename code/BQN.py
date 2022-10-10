@@ -3,8 +3,7 @@ from typing import Callable, Union
 import numpy as np
 prod=lambda x,z=1:[z:=z*i for i in x][-1]
 pathToFile='/'+'/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
-import sys
-print("In module products sys.path[0], __package__ ==", sys.path[0], __package__)
+
 class char:
     def __init__(self,character):
         if len(character)!=1:
@@ -79,7 +78,12 @@ def SmartReshape(x,shape):
 def GroupTypes(t:list[Union[str,list[int]]],args:list[str]):
     types=list(t)
     done=[]
-    funcMap={'n':float,'s':str,'c':char,'f':BQNfn,'F':eval}
+    funcMap={
+        'n':(lambda x:int(x) if 0==float(x)%1 else float(x)),
+        's':str,
+        'c':char,
+        'f':BQNfn,
+        'F':eval}
     for i in types:
         if type(i)==list:
             done=[SmartReshape(done,i)]+done[prod(i):]
@@ -115,6 +119,8 @@ def PyToMediary(x):
             x=tuple(np.ravel(x[0]))+x[1:]
         else: raise Exception("Type not recognized by BQN")
     return types,*map(str,args)
+
+# print(BQNfn('1⟜+')(1)) DOESN'T WORK
 
 if __name__ == "__main__":
     x=((
