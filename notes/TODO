@@ -2,10 +2,12 @@ Intermediary type (mediary for short) means converting any type from both BQN an
 where first string shows types of the elements, and the rest of the strings are string representations of each element
 
 BQN:
-    CollapseInts in .bqn can be massively simplified
-    consider adding dictionaries as a type by representing them as 2 row arrays.
-
+    CollapseInts in .bqn can be massively simplified.
+    add PyFuncStruct.run so you can use python function in bqn more easily.
 Python:
-    Make numpy arrays work better.
+    Make numpy arrays work better. bit vauge, but basically numpy has it's own types for stuff that needs handling.
     Add type safety and custom errors for them.
     Add more test cases
+
+Bugs:
+    None yet.

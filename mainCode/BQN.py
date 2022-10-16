@@ -1,7 +1,8 @@
 import subprocess
 from typing import Callable, Union
 import numpy as np
-prod=lambda x,z=1:[z:=z*i for i in x][-1]
+from os import system as SH
+
 pathToFile='/'+'/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
 
 class char:
@@ -15,13 +16,6 @@ class char:
 
     def __repr__(self) -> str:
         return f"char('{self.character}')"
-
-def charArrToStr(x):
-    return ''.join(map(str,np.ravel(x)))
-
-def Print(x):
-    print(x)
-    return x
 
 def BQN(*args:str):
     process = subprocess.Popen(["BQN",pathToFile+"main.bqn",*args], stdout=subprocess.PIPE,text=1)
@@ -43,7 +37,6 @@ def PrefixedInteger(types:str) -> tuple[int,int]:
     lenOfArg=1+sum((x:=x and i in "0123456789" for i in types[1:]))
     listLen=int(types[1:lenOfArg])
     return lenOfArg,listLen
-
 
 def CollapseInts(t:str) -> list[Union[str,list[int]]]:
     types=str(t)
@@ -68,11 +61,11 @@ def CollapseInts(t:str) -> list[Union[str,list[int]]]:
 def SmartReshape(x,shape):
     if len(shape)==1:
         if all((type(i)==char for i in x[:shape[0]])):
-            r=charArrToStr(x[:shape[0]])
+            r=''.join(map(str,np.ravel(x[:shape[0]])))
         else:
             return tuple(x[:shape[0]])
     else:
-        r=np.reshape(np.array(x[:prod(shape)],object),shape)
+        r=np.reshape(np.array(x[:np.prod(shape)],object),shape)
     return r
 
 def GroupTypes(t:list[Union[str,list[int]]],args:list[str]):
@@ -86,7 +79,7 @@ def GroupTypes(t:list[Union[str,list[int]]],args:list[str]):
         'F':eval}
     for i in types:
         if type(i)==list:
-            done=[SmartReshape(done,i)]+done[prod(i):]
+            done=[SmartReshape(done,i)]+done[np.prod(i):]
         else:
             done=[funcMap[i](args[0])]+done
             args=args[1:]
@@ -120,7 +113,24 @@ def PyToMediary(x):
         else: raise Exception("Type not recognized by BQN")
     return types,*map(str,args)
 
-# print(BQNfn('1⟜+')(1)) DOESN'T WORK
+def StartBQNScript(path:str):
+    SH('BQN "'+path+'"')
+
+class Communication:
+    """The BQN file provided needs to import "comm.bqn".
+    if id is empty, it will be replaced with a random number"""
+
+    def __init__(self,id:str,pathToBQN:str=''):
+        self.commPath="communication/"+id+'/'
+        if pathToBQN:
+            StartBQNScript(pathToBQN)
+
+    def BQNExec(msg:str,action:str=""):
+        availableActions="exec","value"
+        if action not in availableActions:
+            raise Exception(f"The action was not recognized.\nValid: {availableActions}\nInvalid: {action}")
+        with open(action+'.bqn', 'w') as fp:
+            fp.write(msg)
 
 if __name__ == "__main__":
     x=((
