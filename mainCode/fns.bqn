@@ -56,35 +56,36 @@ Crunch←{
 }
 
 IntoMediary ⇐{
-  𝕊⁼: (ExtractTypes <⊸∾ Crunch) 𝕩;
-  𝕊:
+  𝕊: (ExtractTypes <⊸∾ Crunch) 𝕩;
+  𝕊⁼:
     types ←⊑𝕩
     args ←1↓𝕩
 
     intStrTypes ←⊑ CollapseInts ⟨⟩‿types
 
-    1⊑ GroupTypes ⌽¨args‿⟨⟩‿intStrTypes
+    >1⊑ GroupTypes ⌽¨args‿⟨⟩‿intStrTypes
 }
 
 {𝕊:
-•Show •Show⌾IntoMediary ⟨"l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnn","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","3"⟩
+•Show •Show⌾IntoMediary •Show⟨"helllo",⟨1,2,3,⟨'a',"boo"⟩,4⟩⟩
 }⍟0@ #testing on or off
 
 FileExists←⊢⊣"Couldn't find python file to run"!•file.Exists
 
 Communication⇐{
  ∧´𝕩∊"_"∾⥊"aA"+⌜↕26?
-  commPath⇐"communication/"∾𝕩
 
+  commPath⇐"communication/"∾𝕩
   •file.Exists◶⟨
     •file.CreateDir
-    •file.Remove¨(<∾⟜'/')∾¨•file.List
+    •file.Remove¨<∘∾⟜'/'∾¨•file.List
   ⟩commPath
   •SH "Python3" ⋈ FileExists𝕨
 
   SendMsg ⇐ {
     𝕊msg:
-      msg •FChars˜ commPath∾"/msgFromBQN"∾(•Repr≠•file.List commPath)∾".txt";
+      path←commPath∾"/msgFromBQN"∾(•Repr≠•file.List commPath)∾".txt"
+      path •FChars ToPyTuple IntoMediary msg;
     𝕊⁼:
       GetMsg 1
   }

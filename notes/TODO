@@ -8,6 +8,7 @@ Python:
     Make numpy arrays work better. bit vauge, but basically numpy has it's own types for stuff that needs handling.
     Add type safety and custom errors for them.
     Add more test cases
+    Add infinity and nan type support (or add an error indicating it isn't possible)
 
 Bugs:
     None yet.

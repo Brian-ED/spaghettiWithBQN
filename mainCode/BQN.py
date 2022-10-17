@@ -1,8 +1,10 @@
+import asyncio
+import os
 import subprocess
 from typing import Callable, Union
 import numpy as np
 from os import system as SH
-
+from time import sleep
 pathToFile='/'+'/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
 
 class char:
@@ -114,18 +116,62 @@ def PyToMediary(x):
     return types,*map(str,args)
 
 def StartBQNScript(path:str):
-    SH('BQN "'+path+'"')
+    SH(f'BQN "{path}"')
+
+def ToBQNList(pyList:list[str]):
+    return '⟨'+','.join(['"'+i.replace('"','""')+'"' for i in pyList])+'⟩'
+
+    
 
 class Communication:
-    """The BQN file provided needs to import "comm.bqn".
-    if id is empty, it will be replaced with a random number"""
 
     def __init__(self,id:str,pathToBQN:str=''):
-        self.commPath="communication/"+id+'/'
+        self.commPath="communication/"+id
         if pathToBQN:
             StartBQNScript(pathToBQN)
+        self.coro=None
+    
+    def SendMsg(self,msg:str):
+        path=f"{self.commPath}/msgFromBQN{len(os.listdir(self.commPath))}.txt"
+        with open(path,"w") as f:
+            f.write(ToBQNList(PyToMediary(msg)))
+    
+    def GetMsg(self,wait=False):
+        FindFile=lambda x:[i.startswith("msgFromBQN") for i in os.listdir(x)]
+        m=FindFile(self.commPath)
+        while wait and not any(m):
+            sleep(0.2)
+            m=FindFile(self.commPath) 
+        if any(m):
+            raise Exception("No msg found. Please do 'GetMsg 1' if expected to wait for msg")
+        file=sorted([i for i in zip(m,os.listdir(self.commPath)) if m])[0]
+        with open(file) as f:
+            r=Handler(f.read())
+        os.remove(file)
+        return r
+    
+    def GetMsgAsync(self,coro:function):
+        """A decorator that executes a function every message.
 
-    def BQNExec(msg:str,action:str=""):
+        The events must be a :ref:`coroutine <coroutine>`.
+
+        Example
+        ---------
+        ```
+        from BQN.BQN import Communication
+        comm=Communication("hello")
+        
+        @comm.GetMsgAsync
+        async def OnMsgGotten(msg):
+            print(msg)
+        ```
+        """
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError('event registered must be a coroutine function')
+        self.coro=coro
+        return coro
+
+    def BQNExec(self,msg:str,action:str=""):
         availableActions="exec","value"
         if action not in availableActions:
             raise Exception(f"The action was not recognized.\nValid: {availableActions}\nInvalid: {action}")

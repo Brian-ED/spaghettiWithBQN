@@ -1,7 +1,5 @@
-code/.bqn
-code/.py
 out.txt
-
+mainCode/communication/*
 # These are tests in progress for communication
 bot.py
 bot.bqn
