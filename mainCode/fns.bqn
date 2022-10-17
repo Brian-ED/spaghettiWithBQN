@@ -7,17 +7,17 @@ ToPyTuple ⇐{'['∾']'«∾1⌽¨""","""⊸∾⟜∾¨"\"""⊸(⊑⊐)◶"\\"�
 PrefixedInteger ←⊢(⊢∾⟜ToInt 1↓↑˜)1+⟜(+´∧`)1↓∊⟜('0'+↕10)
 
 CollapseInts ←{
-    # ⟨ 's' ⟨ 3 3 3 ⟩ 's' 's' ⟨ 2 ⟩ 'n' 'n' 'n' 'n' ⟩ ≡ CollapseInts "sl3 3 3ssl2nnnn"
-    # TODO can be massively simplified
-    𝕊 done‿types:
-        'l'≡⊑types?
-        lenOfArg‿listLen←PrefixedInteger types
-        ⌽⌾(⊑⌽∘⊑){ 𝕊 done‿types:
-            lenOfArg‿listLen←PrefixedInteger types
-            ⟨listLen⊸∾⌾(⊑⌽)done ,lenOfArg↓types⟩
-        } _While_ {' '≡⊑1⊑𝕩}⍟(0=⟜≠1⟜⊑) Print ⟨done∾⟨⟨listLen⟩⟩,lenOfArg↓types⟩;
-    𝕊 done‿types:
-        (1⊸↓⋈˜done∾⊑)types
+  # ⟨ 's' ⟨ 3 3 3 ⟩ 's' 's' ⟨ 2 ⟩ 'n' 'n' 'n' 'n' ⟩ ≡ CollapseInts "sl3 3 3ssl2nnnn"
+  # TODO can be massively simplified
+  𝕊 done‿types:
+    'l'≡⊑types?
+    lenOfArg‿listLen←PrefixedInteger types
+    ⌽⌾(⊑⌽∘⊑){ 𝕊 done‿types:
+      lenOfArg‿listLen←PrefixedInteger types
+      ⟨listLen⊸∾⌾(⊑⌽)done ,lenOfArg↓types⟩
+    } _While_ {' '≡⊑1⊑𝕩}⍟(0=⟜≠1⟜⊑) Print ⟨done∾⟨⟨listLen⟩⟩,lenOfArg↓types⟩;
+  𝕊 done‿types:
+    (1⊸↓⋈˜done∾⊑)types
 }_While_(""≢⊑∘⌽)
 
 # TODO add .run so you can use python function in bqn
@@ -26,16 +26,16 @@ PyFuncStruct⇐{
 }
 
 GroupTypes←{
-    𝕊 args‿done‿types:
-        0≡•Type ⊑types?
-            ⟨args
-            done (<∘⥊∾×´⊸↓)˜ ⊑types
-            1↓types⟩;
+  𝕊 args‿done‿types:
+    0≡•Type ⊑types?
+      ⟨args
+      done (<∘⥊∾×´⊸↓)˜ ⊑types
+      1↓types⟩;
 
-    𝕊 args‿done‿types:
-        ⟨1↓args
-        done ∾˜ args {𝕏𝕨}○⊑ ToInt‿<‿⊢‿•BQN‿ PyFuncStruct/˜"nscfF"=⊑types
-        1↓types⟩
+  𝕊 args‿done‿types:
+    ⟨1↓args
+    done ∾˜ args {𝕏𝕨}○⊑ ToInt‿<‿⊢‿•BQN‿ PyFuncStruct/˜"nscfF"=⊑types
+    1↓types⟩
 }_While_(""≢⊑∘⌽)
 
 ExtractTypes ←{

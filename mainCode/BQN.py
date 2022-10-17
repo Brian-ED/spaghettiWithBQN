@@ -1,14 +1,16 @@
 import asyncio
 import os
 import subprocess
-from typing import Callable, Union
+from typing import Any, Callable, Union
 import numpy as np
 from os import system as SH
 from time import sleep
+
+
 pathToFile='/'+'/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
 
 class char:
-    def __init__(self,character):
+    def __init__(self,character:str):
         if len(character)!=1:
             raise Exception(f'Invalid length for character: "{character}"')
         self.character=character
@@ -19,20 +21,22 @@ class char:
     def __repr__(self) -> str:
         return f"char('{self.character}')"
 
-def BQN(*args:str):
-    process = subprocess.Popen(["BQN",pathToFile+"main.bqn",*args], stdout=subprocess.PIPE,text=1)
+def BQN(*args:str)->Any:
+    process = subprocess.Popen(["BQN",pathToFile+"main.bqn",*args], stdout=subprocess.PIPE,text=True)
     output, error = process.communicate()
     if error: raise Exception(error)
-    return Handler(eval(output))
+    return Handler(eval(output)) # type: ignore
 
-def BQNfn(bqnFunc:str)->Callable:
-    return lambda x,y=None:BQN(bqnFunc,*PyToMediary((x,y))) if y!=None else BQN(bqnFunc,*PyToMediary((x,)))
+def BQNfn(bqnFunc:str)->Callable[[Any,Any],Any]:
+    def f(x:Any,y:Any=None)->Any:
+        return BQN(bqnFunc,*PyToMediary((x,y))) if y!=None else BQN(bqnFunc,*PyToMediary((x,)))
+    return f
 
-def BQNEval(arg:str):
-    process = subprocess.Popen(["BQN",pathToFile+"main.bqn",arg], stdout=subprocess.PIPE,text=1)
+def BQNEval(arg:str)->Any:
+    process = subprocess.Popen(["BQN",pathToFile+"main.bqn",arg], stdout=subprocess.PIPE,text=True)
     output, error = process.communicate()
     if error: raise Exception(error)
-    return Handler(eval(output))
+    return Handler(eval(output)) # type: ignore
 
 def PrefixedInteger(types:str) -> tuple[int,int]:
     x=1
@@ -60,21 +64,23 @@ def CollapseInts(t:str) -> list[Union[str,list[int]]]:
             types=types[1:]
     return done
 
-def SmartReshape(x,shape):
+def SmartReshape(x:Any,shape:tuple[int])->Any:
     if len(shape)==1:
         if all((type(i)==char for i in x[:shape[0]])):
-            r=''.join(map(str,np.ravel(x[:shape[0]])))
+            r=''.join(str(i) for i in x[:shape[0]])
         else:
-            return tuple(x[:shape[0]])
+            r=tuple(x[:shape[0]])
     else:
         r=np.reshape(np.array(x[:np.prod(shape)],object),shape)
     return r
 
-def GroupTypes(t:list[Union[str,list[int]]],args:list[str]):
-    types=list(t)
+def GroupTypes(types:list[Union[str,list[int]]],args:list[str]):
     done=[]
-    funcMap={
-        'n':(lambda x:int(x) if 0==float(x)%1 else float(x)),
+    def ToNumber(x:str):
+        y=x.replace("¯","-").replace("∞","inf")
+        return int(x) if 0==float(y)%1 else float(y)
+    funcMap:dict[str,Callable[[str],Any]]={
+        'n':ToNumber,
         's':str,
         'c':char,
         'f':BQNfn,
@@ -83,7 +89,7 @@ def GroupTypes(t:list[Union[str,list[int]]],args:list[str]):
         if type(i)==list:
             done=[SmartReshape(done,i)]+done[np.prod(i):]
         else:
-            done=[funcMap[i](args[0])]+done
+            done=[funcMap[str(i)](args[0])]+done
             args=args[1:]
     return done[0]
 
@@ -92,19 +98,16 @@ def Handler(allArgs:list[str]):
     args=allArgs[1:]
     return GroupTypes(CollapseInts(types)[::-1],args[::-1])
 
-def PyToMediary(x):
+def PyToMediary(arg:Any)->tuple[str]:
+    x=type(arg)(arg)
     types=""
     args=()
-    scalers={str:'s',char:'c',int:'n',np.int64:'n'}
+    scalers:dict[Callable[[str],Any],str]={str:'s',char:'c',int:'n',np.int64:'n',bool:'n'}
     while len(x)>0:
         t=type(x[0])
         if t in scalers:
             types+=scalers[t]
-            args+=x[0],
-            x=x[1:]
-        elif t==bool:
-            types+='n'
-            args+=int(x[0]),
+            args+=(x[0],) if t!=bool else (int(x[0]),)
             x=x[1:]
         elif t in{tuple,list}:
             types+='l'+str(len(x[0]))
@@ -113,15 +116,15 @@ def PyToMediary(x):
             types+='l'+' '.join(map(str,np.shape(x[0])))
             x=tuple(np.ravel(x[0]))+x[1:]
         else: raise Exception("Type not recognized by BQN")
-    return types,*map(str,args)
+    return tuple((types,*map(str,args)))
 
-def StartBQNScript(path:str):
+def StartBQNScript(path:str)->None:
     SH(f'BQN "{path}"')
 
 def ToBQNList(pyList:list[str]):
     return '⟨'+','.join(['"'+i.replace('"','""')+'"' for i in pyList])+'⟩'
 
-    
+
 
 class Communication:
 
@@ -134,7 +137,7 @@ class Communication:
     def SendMsg(self,msg:str):
         path=f"{self.commPath}/msgFromBQN{len(os.listdir(self.commPath))}.txt"
         with open(path,"w") as f:
-            f.write(ToBQNList(PyToMediary(msg)))
+            f.write(ToBQNList([*PyToMediary(msg)]))
     
     def GetMsg(self,wait=False):
         FindFile=lambda x:[i.startswith("msgFromBQN") for i in os.listdir(x)]
@@ -144,9 +147,9 @@ class Communication:
             m=FindFile(self.commPath) 
         if any(m):
             raise Exception("No msg found. Please do 'GetMsg 1' if expected to wait for msg")
-        file=sorted([i for i in zip(m,os.listdir(self.commPath)) if m])[0]
+        file=sorted([j for i,j in zip(m,os.listdir(self.commPath)) if i])[0]
         with open(file) as f:
-            r=Handler(f.read())
+            r=Handler(eval(f.read()))
         os.remove(file)
         return r
     
@@ -180,7 +183,7 @@ class Communication:
 
 if __name__ == "__main__":
     x=((
-        np.reshape([*map(char,("t","h","i","s","i","s"," ","a","t","e","s","t"))],(3,4)),
+        np.reshape(np.array(map(char,"thisis atest")),(3,4)),
         np.array((
          (1,2),
          (3,4),
