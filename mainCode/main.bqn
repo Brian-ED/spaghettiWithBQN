@@ -1,4 +1,4 @@
-f←•Import "fns.bqn"
+f←•Import "mainCode/"⊸∾⍟(¬•file.Exists)"fns.bqn"
 
 Main ←{
   fn 𝕊 args:
@@ -14,4 +14,4 @@ EvalFn←{
   f.ToPyTuple fn Main args 
 }
 
-•Out EvalFn⍟(⟨⟩⊸≢) •args
+#•Out EvalFn⍟(⟨⟩⊸≢) •args

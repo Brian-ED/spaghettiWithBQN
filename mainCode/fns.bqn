@@ -1,42 +1,23 @@
 _While_ ⇐{𝔽⍟𝔾∘𝔽_𝕣_𝔾∘𝔽⍟𝔾𝕩}
 ToInt ⇐10⊸×⊸+˜´∘⌽-⟜'0'
-StartsWith ⇐ ≤○≠◶0‿(⊣≡≠⊸↑)˜
+StartsWith ⇐ ≤○≠◶⟨0⋄⊣≡≠⊸↑⟩˜
 Print ⇐⊢⊣  (•path∾"/../out.txt") •FChars •Repr
-IsString ⇐{1==𝕩?∧´2=•Type¨𝕩;0}
+IsString ⇐(1==)◶⟨0⋄∧´2=•Type¨⟩
 ToPyTuple ⇐{'['∾']'«∾1⌽¨""","""⊸∾⟜∾¨"\"""⊸(⊑⊐)◶"\\"‿"\"""‿⥊¨¨𝕩}
 PrefixedInteger ←⊢(⊢∾⟜ToInt 1↓↑˜)1+⟜(+´∧`)1↓∊⟜('0'+↕10)
-
-CollapseInts ←{
-  # ⟨ 's' ⟨ 3 3 3 ⟩ 's' 's' ⟨ 2 ⟩ 'n' 'n' 'n' 'n' ⟩ ≡ CollapseInts "sl3 3 3ssl2nnnn"
-  # TODO can be massively simplified
-  𝕊 done‿types:
-    'l'≡⊑types?
-    lenOfArg‿listLen←PrefixedInteger types
-    ⌽⌾(⊑⌽∘⊑){ 𝕊 done‿types:
-      lenOfArg‿listLen←PrefixedInteger types
-      ⟨listLen⊸∾⌾(⊑⌽)done ,lenOfArg↓types⟩
-    } _While_ {' '≡⊑1⊑𝕩}⍟(0=⟜≠1⟜⊑) Print ⟨done∾⟨⟨listLen⟩⟩,lenOfArg↓types⟩;
-  𝕊 done‿types:
-    (1⊸↓⋈˜done∾⊑)types
-}_While_(""≢⊑∘⌽)
+Split←(⊢-˜+`×¬)∘=⊔⊢
+S←•Show
+ToInts←ToInt¨' 'Split⊢
 
 # TODO add .run so you can use python function in bqn
-PyFuncStruct⇐{
-    repr⇐𝕩
+PyFunc ⇐{
+  𝕊funcName:
+  !IsString 𝕩
+  "applyPyFunc" comm.SendMsg funcName⊸⋈
 }
 
-GroupTypes←{
-  𝕊 args‿done‿types:
-    0≡•Type ⊑types?
-      ⟨args
-      done (<∘⥊∾×´⊸↓)˜ ⊑types
-      1↓types⟩;
-
-  𝕊 args‿done‿types:
-    ⟨1↓args
-    done ∾˜ args {𝕏𝕨}○⊑ ToInt‿<‿⊢‿•BQN‿ PyFuncStruct/˜"nscfF"=⊑types
-    1↓types⟩
-}_While_(""≢⊑∘⌽)
+x‿y←PyFunc¨ "hello"‿"hi"
+•Show x‿y
 
 ExtractTypes ←{
   IsString 𝕩? 's';
@@ -60,29 +41,50 @@ IntoMediary ⇐{
   𝕊⁼:
     types ←⊑𝕩
     args ←1↓𝕩
+    
+    typesInShape←⊑⟨⟩≡⟜'l'◶⟨
+      ∾˜
+      {-+´𝕩∊' '∾'0'+↕10}(ToInts∘↑(⌽<∘⥊∾×´⊸↓)⌽∘↓)⊢
+    ⟩´types
 
-    intStrTypes ←⊑ CollapseInts ⟨⟩‿types
+    args GroupTypes typesInShape
+}
 
-    >1⊑ GroupTypes ⌽¨args‿⟨⟩‿intStrTypes
+GroupTypes←{args𝕊typesInShape:
+  x←𝕨
+  F←{𝕊:(x⌽˜↩1)⊢⊑x}
+
+  {(F@){𝕏𝕨}ToInt‿⊢‿⊑‿•BQN‿ PyFunc⊑˜⊑"nscfF"⊐𝕩}⚇0 𝕩
 }
 
 {𝕊:
-•Show •Show⌾IntoMediary •Show⟨"helllo",⟨1,2,3,⟨'a',"boo"⟩,4⟩⟩
-}⍟0@ #testing on or off
+S S⌾IntoMediary S⟨"helllo"⋄⟨1⋄2⋄3⋄⟨'a'⋄"boo"⟩⋄4⟩⟩
+}⍟1@ #testing on or off
 
 FileExists←⊢⊣"Couldn't find python file to run"!•file.Exists
 
-Communication⇐{
- ∧´𝕩∊"_"∾⥊"aA"+⌜↕26?
+comm⇐{
 
-  commPath⇐"communication/"∾𝕩
+  commPath⇐"comm/Default"
   •file.Exists◶⟨
     •file.CreateDir
     •file.Remove¨<∘∾⟜'/'∾¨•file.List
   ⟩commPath
   •SH "Python3" ⋈ FileExists𝕨
 
+  SetID⇐{
+    "Only strings as name of communication allowed"!IsString𝕩
+    (∧´𝕩∊"_"∾⥊"aA"+⌜↕26)!˜"only alphabetical characters and spaces as name of communication allowed"
+    commPath←"comm/"∾𝕩
+  }
+
+  MsgExists⇐{𝕊:"TODO"}
+
   SendMsg ⇐ {
+    action𝕊msg:
+      !action∊⟨"applyPyFunc"⟩
+      path←commPath∾"/msgFromBQN"∾action∾(•Repr≠•file.List commPath)∾".txt"
+      path •FChars ToPyTuple IntoMediary msg;
     𝕊msg:
       path←commPath∾"/msgFromBQN"∾(•Repr≠•file.List commPath)∾".txt"
       path •FChars ToPyTuple IntoMediary msg;
@@ -94,7 +96,7 @@ Communication⇐{
   GetMsg ⇐{
     wait←1≡𝕩
     FindFile←"msgFromPy"⊸(⊣≡≠⊸↑)¨•file.List
-    m←FindFile _while_{•Delay 0.2,¬∨´𝕩}⍟wait FindFile commPath
+    m←FindFile _while_{•Delay 0.2⋄¬∨´𝕩}⍟wait FindFile commPath
     noMsgError!∨´m
     file←⊑∧m/•file.List commPath
     (•file.Remove⊢IntoMediary⁼∘•FChars) file
