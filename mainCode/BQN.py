@@ -1,15 +1,15 @@
 import asyncio
 from functools import reduce
+from math import inf, nan
 import os
 import subprocess
 from typing import Any, Callable, Union
 import numpy as np
 from os import system as SH
-from time import sleep
+from time import sleep, time_ns
+pathToFile='/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
 
-
-pathToFile='/'+'/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
-
+Print=lambda x:(x,print(x))[0]
 class char:
     def __init__(self,character:str):
         if len(character)!=1:
@@ -26,7 +26,8 @@ def BQN(*args:str)->Any:
     process = subprocess.Popen(["BQN",pathToFile+"main.bqn",*args], stdout=subprocess.PIPE,text=True)
     output, error = process.communicate()
     if error: raise Exception(error)
-    return Handler(eval(output)) # type: ignore
+    print(output)
+    return Handler(eval(output))
 
 def BQNfn(bqnFunc:str)->Callable[[Any,Any],Any]:
     def f(x:Any,y:Any=None)->Any:
@@ -42,7 +43,7 @@ def BQNEval(arg:str)->Any:
 def PrefixedInteger(types:str) -> tuple[int,int]:
     x=1
     lenOfArg=1+sum((x:=x and i in "0123456789" for i in types[1:]))
-    listLen=int(types[1:lenOfArg])
+    listLen=int(types[1:lenOfArg])if 1!=lenOfArg else None
     return lenOfArg,listLen
 
 def CollapseInts(t:str) -> list[Union[str,list[int]]]:
@@ -50,20 +51,59 @@ def CollapseInts(t:str) -> list[Union[str,list[int]]]:
     done=[]
     while ""!=types:
         if types[0]=='l':
-            lenOfArg,listLen=PrefixedInteger(types)
-
             done+=[[]]
-            done[-1]+=[listLen]
+            lenOfArg,listLen=PrefixedInteger(types)
             types=types[lenOfArg:]
-
-            while types[0]==' ':
-                lenOfArg,listLen=PrefixedInteger(types)
+            if listLen!=None:
                 done[-1]+=[listLen]
-                types=types[lenOfArg:]
+            
+                while types[0]==' ':
+                    lenOfArg,listLen=PrefixedInteger(types)
+                    done[-1]+=[listLen]
+                    types=types[lenOfArg:]
         else:
             done+=types[0],
             types=types[1:]
     return done
+
+
+def Handler2(allArgs:str) -> list[Union[str,list[int]]]:
+    types=allArgs[0]
+    args=allArgs[1:]
+    def Func(𝕩,𝕨):
+        if 𝕨=='l':
+            # (-+´𝕩∊' '∾'0'+↕10)(ToNums∘↑(⥊<∘⥊)⌽∘↓)𝕩
+            
+            # (-+´𝕩∊' '∾'0'+↕10)
+            shapeLen=-sum(i in' 0123456789'for i in 𝕩)
+            # shapeLen         (ToNums∘↑(⥊<∘⥊)⌽∘↓)𝕩
+
+            #                   ToNums∘↑
+            shape=[int(i) for i in 𝕩[shapeLen:]]
+            # shapeLen         (shape   (⥊<∘⥊)⌽∘↓)𝕩
+
+            #                                 ⌽∘↓
+            nonShape=𝕩[:shapeLen:-1]
+            # shapeLen         (shape   (⥊<∘⥊)nonShape)𝕩
+            
+            # shape (⥊<∘⥊) nonShape
+            return [SmartReshape(nonShape,shape)]
+        return 𝕨+𝕩
+    typesInShape=reduce(Func,types,())
+    GroupTypes(typesInShape,args)
+
+"""
+    types ←⊑𝕩
+    args ←1↓𝕩
+    
+    typesInShape←⊑⟨⟩≡⟜'l'◶⟨
+      ∾˜
+      {-+´𝕩∊' '∾'0'+↕10}(ToNums∘↑(⌽<∘⥊∾×´⊸↓)⌽∘↓)⊢
+    ⟩´types
+
+    args GroupTypes typesInShape
+"""
+
 
 def SmartReshape(x:Any,shape:tuple[int])->Any:
     if len(shape)==1:
@@ -72,7 +112,7 @@ def SmartReshape(x:Any,shape:tuple[int])->Any:
         else:
             r=tuple(x[:shape[0]])
     else:
-        r=np.reshape(np.array(x[:np.prod(shape)],object),shape)
+        r=np.reshape(np.array(x[:int(np.prod(shape))],object),shape)
     return r
 
 def GroupTypes(types:list[Union[str,list[int]]],args:list[str]):
@@ -88,7 +128,7 @@ def GroupTypes(types:list[Union[str,list[int]]],args:list[str]):
         'F':eval}
     for i in types:
         if type(i)==list:
-            done=[SmartReshape(done,i)]+done[np.prod(i):]
+            done=[SmartReshape(done,i)]+done[int(np.prod(i)):]
         else:
             done=[funcMap[str(i)](args[0])]+done
             args=args[1:]
@@ -101,7 +141,7 @@ def Handler(allArgs:list[str]):
 
 def PyToMediary(arg:Any)->tuple[str]:
     x=type(arg)(arg)
-    types=""
+    types=f"l{len(arg)}"
     args=()
     scalers:dict[Callable[[str],Any],str]={str:'s',char:'c',int:'n',np.int64:'n',bool:'n'}
     while len(x)>0:
@@ -130,7 +170,7 @@ def ToBQNList(pyList:list[str]):
 class Communication:
 
     def __init__(self,id:str,pathToBQN:str=''):
-        self.commPath="communication/"+id
+        self.commPath="comm/"+id
         if pathToBQN:
             StartBQNScript(pathToBQN)
         self.coro=None
@@ -154,7 +194,7 @@ class Communication:
         os.remove(file)
         return r
     
-    def GetMsgAsync(self,coro:function):
+    def GetMsgAsync(self,coro):
         """A decorator that executes a function every message.
 
         The events must be a :ref:`coroutine <coroutine>`.
@@ -184,9 +224,9 @@ class Communication:
 
 if __name__ == "__main__":
     x=((
-        np.reshape(np.array(map(char,"thisis atest")),(3,4)),
-        np.array((
-         (1,2),
+        np.reshape([*map(char,"thisis atest")],(3,4)),
+        np.array(
+        ((1,2),
          (3,4),
          (5,6))
         ),
@@ -199,13 +239,13 @@ if __name__ == "__main__":
         'BQNfn'             :0,
         'PrefixedInteger'   :0,
         'CollapseInts'      :0,
-        'Handler'           :0,
+        'Handler'           :1,
         'PyToMediary'       :0
     }
 
     if testing['BQN']:
         # Nest\edli'"stofstrings
-        print("Strings joined: ",BQN('∾´','l4ssss','Nest\\ed','li\'\"st','of','strings'))
+        print("Strings joined: ",BQN('∾´','l1l4ssss','Nest\\ed','li\'\"st','of','strings'))
 
     if testing['BQNfn']:
         print(BQNfn("∾")((1,2,3),(2,3,4)))
@@ -217,21 +257,24 @@ if __name__ == "__main__":
         print("What's the mean?: ",mean((1,2,3)))
 
         join=BQNfn('∾´')
-        print("Strings joined: ",join(['Nest\\ed','li\'\"st','of','strings']))
+        print("Strings joined: ",join(['Nested','list','of','strings']))
+
+        enclose=BQNfn("<")
+        print('enclose: ',enclose(char("a")))
 
 
-    
     if testing['PrefixedInteger']:
         # (3,11)
-        print(PrefixedInteger("l11 22 3"))
+        print(PrefixedInteger("l11 22 3abc"))
 
     if testing['CollapseInts']:
         # ['s', [3, 3, 3], 's', 's', [2], 'n', 'n', 'n', 'n']
         print(CollapseInts("sl3 3 3ssl2nnnn"))
 
     if testing['Handler']:
-        print(Handler(["l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","s",'u','m']))
-    
+        #print(Handler(["l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","s",'u','m']))
+        print(Handler2(["l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","s",'u','m']))
+
     if testing["PyToMediary"]:
         æ=PyToMediary(x)
         print("PyToMediary result: ",æ)

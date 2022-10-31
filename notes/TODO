@@ -1,6 +1,11 @@
+Objectives:
+    moving as much of the code to the BQN side as possible. 
+
 BQN:
-    add PyFuncStruct.run so you can use python function in bqn more easily.
+    finish the PyFunc so you can use python functions in bqn more easily.
     finish MsgExists in the comm namespace.
+    remove •BQN in ToInt function
+
 
 Python:
     Make numpy arrays work better. bit vauge, but basically numpy has it's own types for stuff that needs handling.

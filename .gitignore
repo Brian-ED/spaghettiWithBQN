@@ -1,5 +1,6 @@
+mainCode/__pycache__
+mainCode/comm/*
 out.txt
-mainCode/communication/*
 # These are tests in progress for communication
 bot.py
 bot.bqn

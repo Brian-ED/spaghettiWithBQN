@@ -1,10 +1,16 @@
-f←•Import "mainCode/"⊸∾⍟(¬•file.Exists)"fns.bqn"
+f←•Import "fns.bqn"
 
 Main ←{
   fn 𝕊 args:
     repl←•ReBQN {repl⇐"strict",system⇐⟨f⟩}
     func←Repl fn
-    Func{1=≠𝕩?𝔽⊑𝕩;"Function got more than 2 arguments"!2=≠𝕩?𝔽´⌽𝕩}⌾f.mediaryLang.Handler args
+    {
+      𝕊⟨arg1⟩:
+        f.Print Func arg1;
+      𝕊arg1‿arg2:
+        arg2 Func arg1;
+      !"Function got more than 2 arguments"
+    }⌾(f.IntoMediary⁼) args
 }
 
 EvalFn←{
@@ -14,4 +20,4 @@ EvalFn←{
   f.ToPyTuple fn Main args 
 }
 
-#•Out EvalFn⍟(⟨⟩⊸≢) •args
+•Out EvalFn⍟(⟨⟩⊸≢) •args
