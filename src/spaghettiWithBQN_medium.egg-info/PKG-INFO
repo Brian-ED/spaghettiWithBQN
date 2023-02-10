@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: spaghettiWithBQN-medium
+Version: 0.2
+Summary: BQN evaluation in python.
+Home-page: https://github.com/Brian-ED/spaghettiWithBQN
+Author: Brian Ellingsgaard
+Author-email: brianellingsgaard9@gmail.com
+License: MIT
+Keywords: BQN evaluation in Python.
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+# BQN evaluation in Python

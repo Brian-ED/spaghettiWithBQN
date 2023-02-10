@@ -6,3 +6,7 @@ mainCode/comm/*
 # BQN has the Print function for writing to out.txt.
 # reason for that is printing using •Show breaks the python side when listening for output.
 out.txt
+
+
+# dist is the current distribution file generated when uploading version to pypi
+dist

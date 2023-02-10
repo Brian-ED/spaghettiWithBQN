@@ -152,7 +152,12 @@ def PyToMediary(arg:Any)->tuple[str]:
     x=type(arg)(arg)
     types=f"l{len(arg)}"
     args=()
-    scalers = {str:'s',char:'c',int:'n',float:'n',np.int64:'n',np.int32:'n',np.int16:'n',np.int8:'n',np.intp:'n',bool:'n'}
+    scalers = {
+        str:'s',
+        char:'c',
+        float:'n', np.float64:'n', np.float32:'n', np.float16:'n',
+        int:'n',np.int64:'n',np.int32:'n',np.int16:'n',np.int8:'n',np.intp:'n',
+        bool:'n', np.bool_:'n'}
     while len(x)>0:
         t=type(x[0])
         if t in scalers:

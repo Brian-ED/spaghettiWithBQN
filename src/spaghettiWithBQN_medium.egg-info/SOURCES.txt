@@ -1,0 +1,8 @@
+LICENSE.txt
+setup.cfg
+setup.py
+src/spaghettiWithBQN_medium.egg-info/PKG-INFO
+src/spaghettiWithBQN_medium.egg-info/SOURCES.txt
+src/spaghettiWithBQN_medium.egg-info/dependency_links.txt
+src/spaghettiWithBQN_medium.egg-info/requires.txt
+src/spaghettiWithBQN_medium.egg-info/top_level.txt

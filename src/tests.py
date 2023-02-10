@@ -10,7 +10,7 @@ tests={
         'Handler'           :0,
         'fromMediary'       :0,
         'PyToMediary'       :0,
-        "types"             :1,
+        "types"             :0,
 }
 
 if any(tests.values()):
