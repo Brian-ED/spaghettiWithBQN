@@ -1,11 +1,21 @@
-Intermediary type (mediary for short) means converting any type from both BQN and python to a list of strings
-where first string shows types of the elements, and the rest of the strings are string representations of each element
+Objectives:
+    moving as much of the code to the BQN side as possible. 
 
 BQN:
-    CollapseInts in .bqn can be massively simplified
-    consider adding dictionaries as a type by representing them as 2 row arrays.
+    finish the PyFunc so you can use python functions in bqn more easily.
+    finish MsgExists in the comm namespace.
+    
+    maybe:
+        make a BQN array type and change the dunder methods to be more inline with what bqn would do.
+
 
 Python:
-    Make numpy arrays work better.
+    ✔️Make numpy arrays work better. bit vauge, but basically numpy has it's own types like int32 for stuff that needs handling.
+    ✔️Add infinity and nan type support.
+    test invalid inputs
     Add type safety and custom errors for them.
-    Add more test cases
+    Add more test cases.
+
+Bugs:
+    For unknown reasons, when running the bqn code using Code Runner vs-code extention, the Popen function in BQN.py breaks. running from terminal works.
+    •Show breaks a lot of things in the BQN function in BQN.py. I need to switch off of using std-out as output for python side to get as input.

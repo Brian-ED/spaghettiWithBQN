@@ -1,3 +1,8 @@
-code/.bqn
-code/.py
+mainCode/__pycache__
+
+# comm is used for communication between python and bqn
+mainCode/comm/*
+
+# BQN has the Print function for writing to out.txt.
+# reason for that is printing using •Show breaks the python side when listening for output.
 out.txt
