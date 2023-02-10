@@ -4,7 +4,7 @@ with open("readme.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name='spaghettiWithBQN_medium',
+    name='spaghettiWithBQN',
     version='0.2',
     description="BQN evaluation in python.",
     long_description=long_description,
