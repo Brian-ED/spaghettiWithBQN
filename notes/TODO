@@ -4,14 +4,18 @@ Objectives:
 BQN:
     finish the PyFunc so you can use python functions in bqn more easily.
     finish MsgExists in the comm namespace.
-    remove •BQN in ToInt function
+    
+    maybe:
+        make a BQN array type and change the dunder methods to be more inline with what bqn would do.
 
 
 Python:
-    Make numpy arrays work better. bit vauge, but basically numpy has it's own types for stuff that needs handling.
+    ✔️Make numpy arrays work better. bit vauge, but basically numpy has it's own types like int32 for stuff that needs handling.
+    ✔️Add infinity and nan type support.
+    test invalid inputs
     Add type safety and custom errors for them.
     Add more test cases.
-    Add infinity and nan type support (or add an error indicating it isn't possible).
 
 Bugs:
-    No known bugs.
+    For unknown reasons, when running the bqn code using Code Runner vs-code extention, the Popen function in BQN.py breaks. running from terminal works.
+    •Show breaks a lot of things in the BQN function in BQN.py. I need to switch off of using std-out as output for python side to get as input.

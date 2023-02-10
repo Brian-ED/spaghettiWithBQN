@@ -9,10 +9,19 @@ each letter represents a type:
 'S'‿"extended string" # made for handling string limit by sh
 'c'‿"character"
 'f'‿"BQN variable" 
-'F'‿"Python function" # also means 1-modifier, 2-modifier, and namespace
+'F'‿"Python function"
 ' '‿"number seperator for higher dimensional arrays"
 'E'‿"reserved for extending the first string to more (that string being the types)" # not implemented
 'X'‿"Split here"
+]
+
+The representations of infinity, nan and such in mediarylang are:
+x in bqn and y in python is replaced with z in the representations of numbers: (note some of these may be negative)
+x‿y‿z
+[
+∞    ‿float("inf") ‿"inf"
+¯∞   ‿float("-inf")‿"-inf"
+(0÷0)‿float("nan") ‿"nan"
 ]
 
 Python::

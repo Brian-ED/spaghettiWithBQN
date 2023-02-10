@@ -1,44 +1,42 @@
 import asyncio
-from functools import reduce
-from math import inf, nan
+from functools import reduce as Red
+from funOps import *
 import os
 import subprocess
 from typing import Any, Callable, Union
 import numpy as np
 from os import system as SH
-from time import sleep, time_ns
+from time import sleep
+
 pathToFile='/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
 
-Print=lambda x:(x,print(x))[0]
 class char:
     def __init__(self,character:str):
         if len(character)!=1:
             raise Exception(f'Invalid length for character: "{character}"')
         self.character=character
 
-    def __str__(self) -> str:
-        return self.character
-
-    def __repr__(self) -> str:
-        return f"char('{self.character}')"
+    __str__ =lambda s:s.character
+    __repr__=lambda s:f"char('{s.character}')"
+    def __eq__(self, __o: object) -> bool:
+        return self.character==str(__o)
 
 def BQN(*args:str)->Any:
     process = subprocess.Popen(["BQN",pathToFile+"main.bqn",*args], stdout=subprocess.PIPE,text=True)
     output, error = process.communicate()
-    if error: raise Exception(error)
-    print(output)
+    if error: raise Exception('BQN ERROR: '+error)
     return Handler(eval(output))
 
 def BQNfn(bqnFunc:str)->Callable[[Any,Any],Any]:
     def f(x:Any,y:Any=None)->Any:
-        return BQN(bqnFunc,*PyToMediary((x,y))) if y!=None else BQN(bqnFunc,*PyToMediary((x,)))
+        return BQN(bqnFunc,*(PyToMediary((x,y) if y!=None else (x,))))
     return f
 
 def BQNEval(arg:str)->Any:
     process = subprocess.Popen(["BQN",pathToFile+"main.bqn",arg], stdout=subprocess.PIPE,text=True)
     output, error = process.communicate()
     if error: raise Exception(error)
-    return Handler(eval(output)) # type: ignore
+    return Handler(eval(output))
 
 def PrefixedInteger(types:str) -> tuple[int,int]:
     x=1
@@ -66,33 +64,20 @@ def CollapseInts(t:str) -> list[Union[str,list[int]]]:
             types=types[1:]
     return done
 
+def ToNum(x:str)->Union[float,int]:
+    a= [float,int][0==float(x)%1](x)
+    return a
 
-def Handler2(allArgs:str) -> list[Union[str,list[int]]]:
-    types=allArgs[0]
-    args=allArgs[1:]
-    def Func(𝕩,𝕨):
-        if 𝕨=='l':
-            # (-+´𝕩∊' '∾'0'+↕10)(ToNums∘↑(⥊<∘⥊)⌽∘↓)𝕩
-            
-            # (-+´𝕩∊' '∾'0'+↕10)
-            shapeLen=-sum(i in' 0123456789'for i in 𝕩)
-            # shapeLen         (ToNums∘↑(⥊<∘⥊)⌽∘↓)𝕩
+funcMap:dict[str,Callable[[str],Any]]={
+    'n':ToNum,
+    's':str,
+    'c':char,
+    'f':BQNfn,
+    'F':eval
+}
 
-            #                   ToNums∘↑
-            shape=[int(i) for i in 𝕩[shapeLen:]]
-            # shapeLen         (shape   (⥊<∘⥊)⌽∘↓)𝕩
-
-            #                                 ⌽∘↓
-            nonShape=𝕩[:shapeLen:-1]
-            # shapeLen         (shape   (⥊<∘⥊)nonShape)𝕩
-            
-            # shape (⥊<∘⥊) nonShape
-            return [SmartReshape(nonShape,shape)]
-        return 𝕨+𝕩
-    typesInShape=reduce(Func,types,())
-    GroupTypes(typesInShape,args)
-
-"""
+def FromMediary(allArgs:list[str]) -> Any:
+    """
     types ←⊑𝕩
     args ←1↓𝕩
     
@@ -102,62 +87,83 @@ def Handler2(allArgs:str) -> list[Union[str,list[int]]]:
     ⟩´types
 
     args GroupTypes typesInShape
-"""
+    """
+
+    types,*args=allArgs
+    def Func(𝕩:tuple[Any],𝕨:str):
+        if 𝕨=='l':
+            # (-+´𝕩∊' '∾'0'+↕10)(ToNums∘↑(×´⊸↓ ⌽⊸∾ <∘⥊)⌽∘↓)𝕩
+            
+            # (-+´𝕩∊' '∾'0'+↕10)
+            shapeLen=-sum((i in ' 0123456789') for i in 𝕩 if type(i)==str)
+            # shapeLen          (ToNums∘↑(×´⊸↓ ⌽⊸∾ <∘⥊)⌽∘↓)𝕩
+
+            #                   ToNums∘↑
+            shape=*(int(''.join(i)) for i in Split(𝕩[:-shapeLen],' ')),
+            # shapeLen         (shape    (×´⊸↓ ⌽⊸∾ <∘⥊)⌽∘↓)𝕩
+
+            #                                          ⌽∘↓
+            nonShape=𝕩[-shapeLen:]
+            # shapeLen         (shape    (×´⊸↓ ⌽⊸∾ <∘⥊)nonShape)𝕩
+
+            # shape (×´⊸↓ ⌽⊸∾ <∘⥊) nonShape
+            return Reshape(nonShape,shape),*nonShape[np.prod(shape):]
+        return (𝕨,)+𝕩
+
+    typesInShape=Red(Func,types[::-1],())
+    # print(typesInShape,args)
+    return (*map(tuple,GroupTypes(typesInShape,args)),)[0]
 
 
-def SmartReshape(x:Any,shape:tuple[int])->Any:
-    if len(shape)==1:
-        if all((type(i)==char for i in x[:shape[0]])):
-            r=''.join(str(i) for i in x[:shape[0]])
-        else:
-            r=tuple(x[:shape[0]])
-    else:
-        r=np.reshape(np.array(x[:int(np.prod(shape))],object),shape)
+def GroupTypes(typesInShape,args:list[str]):
+    if type(typesInShape)==str:
+        a=funcMap[typesInShape](args.pop(0))
+        # print("args:",args)
+        return a
+    
+    r = E(Curry(GroupTypes,Any,args))(typesInShape)
+    if len(np.shape(r))==1:
+        return*r,
     return r
 
-def GroupTypes(types:list[Union[str,list[int]]],args:list[str]):
-    done=[]
-    def ToNumber(x:str):
-        y=x.replace("¯","-").replace("∞","inf")
-        return int(x) if 0==float(y)%1 else float(y)
-    funcMap:dict[str,Callable[[str],Any]]={
-        'n':ToNumber,
-        's':str,
-        'c':char,
-        'f':BQNfn,
-        'F':eval}
-    for i in types:
-        if type(i)==list:
-            done=[SmartReshape(done,i)]+done[int(np.prod(i)):]
-        else:
-            done=[funcMap[str(i)](args[0])]+done
-            args=args[1:]
-    return done[0]
+def Reshape(x:Any,shape:tuple[int])->Any:
+    # print('x',shape)
+    # print(x)
+    if len(shape)==1:
+        if [*map(type,x[:shape[0]])]==shape[0]*[char]:
+            return ''.join(str(i) for i in x[:shape[0]])
+        return tuple(x[:shape[0]])
+    return np.reshape(np.array(x[:int(np.prod(shape))],object),shape)
 
 def Handler(allArgs:list[str]):
-    types=allArgs[0]
-    args=allArgs[1:]
-    return GroupTypes(CollapseInts(types)[::-1],args[::-1])
+    types,*args=allArgs
+    def GroupTypes1(types:list[Union[str,list[int]]],args:list[str]):
+        done=[]
+        for i in types:
+            if type(i)==list:
+                done=[Reshape(done,i)]+done[int(np.prod(i)):]
+            else:
+                done=[funcMap[i](args[0])]+done
+                args=args[1:]
+        return done[0]
+    return GroupTypes1(CollapseInts(types)[::-1],args[::-1])
 
 def PyToMediary(arg:Any)->tuple[str]:
     x=type(arg)(arg)
     types=f"l{len(arg)}"
     args=()
-    scalers:dict[Callable[[str],Any],str]={str:'s',char:'c',int:'n',np.int64:'n',bool:'n'}
+    scalers = {str:'s',char:'c',int:'n',float:'n',np.int64:'n',np.int32:'n',np.int16:'n',np.int8:'n',np.intp:'n',bool:'n'}
     while len(x)>0:
         t=type(x[0])
         if t in scalers:
             types+=scalers[t]
-            args+=(x[0],) if t!=bool else (int(x[0]),)
+            args+=x[0],
             x=x[1:]
-        elif t in{tuple,list}:
-            types+='l'+str(len(x[0]))
-            x=*x[0],*x[1:]
-        elif t==np.ndarray:
-            types+='l'+' '.join(map(str,np.shape(x[0])))
-            x=tuple(np.ravel(x[0]))+x[1:]
-        else: raise Exception("Type not recognized by BQN")
-    return tuple((types,*map(str,args)))
+        elif t in (tuple, list, np.ndarray):
+            types+='l'+' '.join(map(str,Shape(x[0])))
+            x=*Ravel(x[0]),*x[1:]
+        else: raise Exception(f"Type not recognized by BQN: {t}")
+    return types,*map(str,args)
 
 def StartBQNScript(path:str)->None:
     SH(f'BQN "{path}"')
@@ -167,14 +173,14 @@ def ToBQNList(pyList:list[str]):
 
 
 
-class Communication:
+class comm:
 
-    def __init__(self,id:str,pathToBQN:str=''):
+    def __init__(self,id="Default",pathToBQN=''):
         self.commPath="comm/"+id
         if pathToBQN:
             StartBQNScript(pathToBQN)
         self.coro=None
-    
+
     def SendMsg(self,msg:str):
         path=f"{self.commPath}/msgFromBQN{len(os.listdir(self.commPath))}.txt"
         with open(path,"w") as f:
@@ -203,9 +209,9 @@ class Communication:
         ---------
         ```
         from BQN.BQN import Communication
-        comm=Communication("hello")
+        communication=comm("hello")
         
-        @comm.GetMsgAsync
+        @communication.GetMsgAsync
         async def OnMsgGotten(msg):
             print(msg)
         ```
@@ -221,61 +227,3 @@ class Communication:
             raise Exception(f"The action was not recognized.\nValid: {availableActions}\nInvalid: {action}")
         with open(action+'.bqn', 'w') as fp:
             fp.write(msg)
-
-if __name__ == "__main__":
-    x=((
-        np.reshape([*map(char,"thisis atest")],(3,4)),
-        np.array(
-        ((1,2),
-         (3,4),
-         (5,6))
-        ),
-        (char('a'),char('b'),("nested",(3,2),1),2,3)
-    ),)
-    y="l3l3 4ccccccccccccl3 2nnnnnnl5ccl3sl2nnnnn","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","3"
-
-    testing={
-        'BQN'               :0,
-        'BQNfn'             :0,
-        'PrefixedInteger'   :0,
-        'CollapseInts'      :0,
-        'Handler'           :1,
-        'PyToMediary'       :0
-    }
-
-    if testing['BQN']:
-        # Nest\edli'"stofstrings
-        print("Strings joined: ",BQN('∾´','l1l4ssss','Nest\\ed','li\'\"st','of','strings'))
-
-    if testing['BQNfn']:
-        print(BQNfn("∾")((1,2,3),(2,3,4)))
-
-        equal=BQNfn("=")
-        print('where are spaces?: ',equal(char(' '),'something a dwa'))
-
-        mean=BQNfn("+´÷≠")
-        print("What's the mean?: ",mean((1,2,3)))
-
-        join=BQNfn('∾´')
-        print("Strings joined: ",join(['Nested','list','of','strings']))
-
-        enclose=BQNfn("<")
-        print('enclose: ',enclose(char("a")))
-
-
-    if testing['PrefixedInteger']:
-        # (3,11)
-        print(PrefixedInteger("l11 22 3abc"))
-
-    if testing['CollapseInts']:
-        # ['s', [3, 3, 3], 's', 's', [2], 'n', 'n', 'n', 'n']
-        print(CollapseInts("sl3 3 3ssl2nnnn"))
-
-    if testing['Handler']:
-        #print(Handler(["l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","s",'u','m']))
-        print(Handler2(["l3l3 4ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","1","2","3","4","5","6","a","b","nested","3","2","1","2","s",'u','m']))
-
-    if testing["PyToMediary"]:
-        æ=PyToMediary(x)
-        print("PyToMediary result: ",æ)
-        print("Intended output?: ",y==æ)

@@ -2,14 +2,14 @@ f←•Import "fns.bqn"
 
 Main ←{
   fn 𝕊 args:
-    repl←•ReBQN {repl⇐"strict",system⇐⟨f⟩}
+    repl←•ReBQN {repl⇐"strict",system⇐⟨⟨"f",f⟩⟩}
     func←Repl fn
     {
-      𝕊⟨arg1⟩:
-        f.Print Func arg1;
-      𝕊arg1‿arg2:
-        arg2 Func arg1;
-      !"Function got more than 2 arguments"
+      𝕊⟨a⟩:
+        Func a;
+      𝕊a‿b:
+        b Func a;
+      !"Function got invalid amount of arguments"
     }⌾(f.IntoMediary⁼) args
 }
 
@@ -19,5 +19,4 @@ EvalFn←{
 
   f.ToPyTuple fn Main args 
 }
-
-•Out EvalFn⍟(⟨⟩⊸≢) •args
+•Out∘EvalFn⍟(⟨⟩⊸≢)•args
