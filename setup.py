@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name='spaghettiWithBQN',
-    version='0.2',
+    version='0.1.1',
     description="BQN evaluation in python.",
     license='MIT',
     author="Brian Ellingsgaard",
     author_email='brianellingsgaard9@gmail.com',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    packages=find_packages('./'),
+    package_dir={'./': 'src'},
     url='https://github.com/Brian-ED/spaghettiWithBQN',
     keywords='BQN evaluation in Python.',
     install_requires=[
