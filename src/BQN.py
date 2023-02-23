@@ -5,7 +5,6 @@ import os
 import subprocess
 from typing import Any, Callable, Union
 import numpy as np
-from os import system as SH
 from time import sleep
 
 pathToFile='/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
@@ -27,13 +26,13 @@ def BQN(*args:str)->Any:
     if error: raise Exception('BQN ERROR: '+error)
     return Handler(eval(output))
 
-def BQNfn(bqnFunc:str)->Callable[[Any,Any],Any]:
-    def f(x:Any,y:Any=None)->Any:
-        return BQN(bqnFunc,*(PyToMediary((x,y) if y!=None else (x,))))
+def BQNfn(bqnFunc:str)->Callable[[Any, Any], Any]:
+    def f(x:Any, y:Any=None)->Any:
+        return BQN(bqnFunc, *(PyToMediary((x,y) if y!=None else (x,))))
     return f
 
 def BQNEval(arg:str)->Any:
-    process = subprocess.Popen(["BQN",pathToFile+"main.bqn",arg], stdout=subprocess.PIPE,text=True)
+    process = subprocess.Popen(["BQN", pathToFile+"main.bqn",arg], stdout=subprocess.PIPE,text=True)
     output, error = process.communicate()
     if error: raise Exception(error)
     return Handler(eval(output))
@@ -78,6 +77,7 @@ funcMap:dict[str,Callable[[str],Any]]={
 
 def FromMediary(allArgs:list[str]) -> Any:
     """
+    ```
     types ←⊑𝕩
     args ←1↓𝕩
     
@@ -87,10 +87,11 @@ def FromMediary(allArgs:list[str]) -> Any:
     ⟩´types
 
     args GroupTypes typesInShape
+    ```
     """
 
     types,*args=allArgs
-    def Func(𝕩:tuple[Any],𝕨:str):
+    def Func(𝕩:tuple,𝕨:str):
         if 𝕨=='l':
             # (-+´𝕩∊' '∾'0'+↕10)(ToNums∘↑(×´⊸↓ ⌽⊸∾ <∘⥊)⌽∘↓)𝕩
             
@@ -107,17 +108,17 @@ def FromMediary(allArgs:list[str]) -> Any:
             # shapeLen         (shape    (×´⊸↓ ⌽⊸∾ <∘⥊)nonShape)𝕩
 
             # shape (×´⊸↓ ⌽⊸∾ <∘⥊) nonShape
-            return Reshape(nonShape,shape),*nonShape[np.prod(shape):]
+            return Reshape(nonShape,shape),*nonShape[int(np.prod(shape)):]
         return (𝕨,)+𝕩
 
     typesInShape=Red(Func,types[::-1],())
     # print(typesInShape,args)
-    return (*map(tuple,GroupTypes(typesInShape,args)),)[0]
+    return (*map(tuple,GroupTypes(typesInShape,args)),)[0] # TODO simplify map[0]
 
 
 def GroupTypes(typesInShape,args:list[str]):
     if type(typesInShape)==str:
-        a=funcMap[typesInShape](args.pop(0))
+        a = funcMap[typesInShape](args.pop(0))
         # print("args:",args)
         return a
     
@@ -130,17 +131,20 @@ def Reshape(x:Any,shape:tuple[int])->Any:
     # print('x',shape)
     # print(x)
     if len(shape)==1:
-        if [*map(type,x[:shape[0]])]==shape[0]*[char]:
-            return ''.join(str(i) for i in x[:shape[0]])
-        return tuple(x[:shape[0]])
+        if all(map(Curry(isinstance, Any, char), x[:shape[0]])):
+            return ''.join(map(str, x[:shape[0]]))
+        return *x[:shape[0]],
     return np.reshape(np.array(x[:int(np.prod(shape))],object),shape)
 
 def Handler(allArgs:list[str]):
     types,*args=allArgs
-    def GroupTypes1(types:list[Union[str,list[int]]],args:list[str]):
+    def GroupTypes1(
+            types:list[Union[str,list[int]]],
+            args:list[str]
+        ):
         done=[]
         for i in types:
-            if type(i)==list:
+            if isinstance(i,(list,tuple)):
                 done=[Reshape(done,i)]+done[int(np.prod(i)):]
             else:
                 done=[funcMap[i](args[0])]+done
@@ -148,16 +152,18 @@ def Handler(allArgs:list[str]):
         return done[0]
     return GroupTypes1(CollapseInts(types)[::-1],args[::-1])
 
+scalers = {
+    str:'s',
+    char:'c',
+    float:'n', np.float64:'n', np.float32:'n', np.float16:'n',
+    int  :'n', np.int64  :'n', np.int32  :'n', np.int16  :'n', np.int8:'n', np.intp:'n',
+    bool:'n', np.bool_:'n'
+}
+
 def PyToMediary(arg:Any)->tuple[str]:
     x=type(arg)(arg)
     types=f"l{len(arg)}"
     args=()
-    scalers = {
-        str:'s',
-        char:'c',
-        float:'n', np.float64:'n', np.float32:'n', np.float16:'n',
-        int:'n',np.int64:'n',np.int32:'n',np.int16:'n',np.int8:'n',np.intp:'n',
-        bool:'n', np.bool_:'n'}
     while len(x)>0:
         t=type(x[0])
         if t in scalers:
@@ -170,41 +176,36 @@ def PyToMediary(arg:Any)->tuple[str]:
         else: raise Exception(f"Type not recognized by BQN: {t}")
     return types,*map(str,args)
 
-def StartBQNScript(path:str)->None:
-    SH(f'BQN "{path}"')
-
 def ToBQNList(pyList:list[str]):
     return '⟨'+','.join(['"'+i.replace('"','""')+'"' for i in pyList])+'⟩'
 
+class CreateComm:
 
-
-class comm:
-
-    def __init__(self,id="Default",pathToBQN=''):
+    def __init__(self,id="Default",pathToBQN=None):
         self.commPath="comm/"+id
         if pathToBQN:
-            StartBQNScript(pathToBQN)
-        self.coro=None
+            subprocess.Popen(["BQN",pathToBQN])
 
-    def SendMsg(self,msg:str):
-        path=f"{self.commPath}/msgFromBQN{len(os.listdir(self.commPath))}.txt"
-        with open(path,"w") as f:
-            f.write(ToBQNList([*PyToMediary(msg)]))
+    def SendMsg(self,msg):
+        path=f"{self.commPath}/msgFromPy{len(os.listdir(self.commPath))}.txt"
+        with open(path,"w",encoding="utf-8") as f:
+            f.write(ToBQNList(PyToMediary(msg)))
     
     def GetMsg(self,wait=False):
-        FindFile=lambda x:[i.startswith("msgFromBQN") for i in os.listdir(x)]
-        m=FindFile(self.commPath)
+        FindFile=lambda:[i.startswith("msgFromBQN") for i in os.listdir(self.commPath)]
+        m=FindFile()
         while wait and not any(m):
             sleep(0.2)
-            m=FindFile(self.commPath) 
-        if any(m):
+            m=FindFile() 
+        if not any(m):
             raise Exception("No msg found. Please do 'GetMsg 1' if expected to wait for msg")
-        file=sorted([j for i,j in zip(m,os.listdir(self.commPath)) if i])[0]
+        file=self.commPath+'/'+sorted([j for i,j in zip(m, os.listdir(self.commPath)) if i])[0]
         with open(file) as f:
             r=Handler(eval(f.read()))
         os.remove(file)
         return r
     
+    coro=None
     def GetMsgAsync(self,coro):
         """A decorator that executes a function every message.
 

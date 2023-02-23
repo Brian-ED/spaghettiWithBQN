@@ -1,4 +1,3 @@
-_While_ ⇐{𝔽⍟𝔾∘𝔽_𝕣_𝔾∘𝔽⍟𝔾𝕩}
 Print ⇐⊢⊣  (•path∾"/out.txt") •FChars •Repr
 IsString ⇐(1==)◶⟨0⋄∧´2=•Type¨⟩
 ToPyTuple ⇐{«∾1⌽¨""","""⊸∾⟜∾¨"\"""⊸(⊑⊐)◶"\\"‿"\"""‿⥊¨¨𝕩}
@@ -41,25 +40,18 @@ ToNums ⇐ ({
   "1"   ‿"0"    ‿"∞"  ‿"N"
 ⟩ReplaceAll⊢)⍟(⟨⟩⊸≢)
 
-# TODO add .run so you can use python function in bqn
-PyFunc ⇐{
-  𝕊funcName:
-  !IsString 𝕩
-  "applyPyFunc" comm.SendMsg funcName⊸⋈
-}
-
 ExtractTypes ←{
-  IsString 𝕩? 's';
+  IsString 𝕩? "s";
   0=•Type𝕩?
-    ∾´("l"⊸∾⍟(0=≠)'l'»«""∾´' '∾¨•Repr¨≢𝕩)∾∾´𝕊¨⥊𝕩;
-  6=•Type𝕩?'F';
+    ""∾´("l"⊸∾⍟(0=≠)'l'»«""∾´' '∾¨•Repr¨≢𝕩)∾""∾´𝕊¨⥊𝕩;
+  6=•Type𝕩?"F";
   "ncf"⊑˜2⌊¯1+•Type 𝕩
 }
 
 Crunch←{
   x←⟨⟩
   IsString◶{
-    x∾↩∾∘("¯∞N"⊸(⊑⊐)◶"-"‿"inf"‿"n"‿⥊¨•Repr)⍟(2≠•Type)¨⥊𝕩
+    x∾↩⥊¨∾∘("¯∞N"⊸(⊑⊐)◶"-"‿"inf"‿"n"‿⥊¨•Repr)⍟(2≠•Type)¨⥊𝕩
   }‿{
     x∾↩<𝕩
   }⚇1𝕩
@@ -72,60 +64,52 @@ IntoMediary ⇐{
     types ←⊑𝕩
     args ←1↓𝕩
     
-    typesInShape←⊑Print⟨⟩≡⟜'l'◶⟨
+    typesInShape←⊑""≡⟜'l'◶⟨
       ∾˜
       {-+´𝕩∊' '∾'0'+↕10}(ToNums∘↑(×´⊸↓ ⌽⊸∾ <∘⥊)⌽∘↓)⊢
     ⟩´types
 
     args GroupTypes typesInShape
 }
-
+NewPyFunc⇐{𝕊fName:
+  {comm𝕊inp: fName comm.PyFunc inp}
+}
 GroupTypes←{args𝕊typesInShape:
   x←𝕨
   F←{𝕊:(x⌽˜↩1)⊢⊑x}
-  {(F@){𝕏𝕨}(⊑ToNums)‿⊢‿⊑‿•BQN‿ PyFunc⊑˜⊑"nscfF"⊐𝕩}⚇0 𝕩
+  {(F@){𝕏𝕨}(⊑ToNums)‿⊢‿⊑‿•BQN‿NewPyFunc⊑˜⊑"nscfF"⊐𝕩}⚇0 𝕩
 }
 
-comm⇐{
-  ⟨commPath
-  SetID
-  
-  ⟩⇐
-  commPath⇐"comm/Default"
-  
-  •file.Exists◶⟨
-    •file.CreateDir
-    •file.Remove¨<∘∾⟜'/'∾¨•file.List
-  ⟩commPath
+CreateComm⇐{
+  commPath⇐@≡◶⊢‿"Default"𝕩
+  (IsString commPath)        !˜"Only strings as name of communication allowed"
+  (∧´commPath∊"_"∾⥊"aA"+⌜↕26)!˜"only alphabetical characters and spaces as name of communication allowed"
+  commPath∾˜↩"comm/"
+  •file.CreateDir⍟(¬•file.Exists) commPath
 
-  SetID⇐{
-    "Only strings as name of communication allowed"!IsString𝕩
-    (∧´𝕩∊"_"∾⥊"aA"+⌜↕26)!˜"only alphabetical characters and spaces as name of communication allowed"
-    commPath←"comm/"∾𝕩
-  }
+  # MsgExists⇐{𝕊:"TODO"}
 
-  MsgExists⇐{𝕊:"TODO"}
-
-  actions←⟨"applyPyFunc"⟩
+  CleanMsgs ⇐ (•file.Remove¨<∘∾⟜'/'∾¨•file.List)∘commPath
 
   SendMsg ⇐ {
     𝕊⁼:GetMsg 1;
-    path←{𝕩∾'/'∾(𝕨⊣"msgFromBQN")∾".txt"∾˜•Repr≠•file.List𝕩}commPath
-    "That action doesn't exist"!∨´𝕨∊actions
+    path←commPath∾"/msgFromBQN"∾(•Repr≠•file.List commPath)∾".txt"
     path •FChars ToPyTuple IntoMediary 𝕩
   }
 
   noMsgError←"No msg found. Please ⎊ if expected, or 'GetMsg 1' to wait for msg"
   GetMsg ⇐{
-    wait←1≡𝕩
     FindFile←"msgFromPy"⊸(⊣≡≠⊸↑)¨•file.List
-    m←FindFile _while_{•Delay 0.2⋄¬∨´𝕩}⍟wait FindFile commPath
+    m←FindFile∘commPath •_while_{•Delay 0.2⋄¬∨´𝕩}⍟(1≡𝕩) FindFile commPath
     noMsgError!∨´m
     file←⊑∧m/•file.List commPath
-    (•file.Remove⊢IntoMediary⁼∘•FChars) file
+    {a ← IntoMediary⁼ •BQN •FChars 𝕩 ⋄ •file.Remove𝕩 ⋄ a} commPath∾'/'∾file
+  }
+
+  # TODO add .run so you can use python function in bqn
+  PyFunc ⇐{
+    funcName𝕊inp:
+    !IsString 𝕩
+    "applyPyFunc" SendMsg funcName⊸⋈
   }
 }
-
-{𝕊:
-•Show IntoMediary •Show IntoMediary⁼ ⟨"l3l4 3ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","nan","inf","-inf","4","5","6","a","b","nested","3","2","1","2","s",'u','m'⟩
-}⍟0@ #testing on or off
