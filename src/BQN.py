@@ -161,8 +161,10 @@ scalers = {
 }
 
 def PyToMediary(arg:Any)->tuple[str]:
-    x=type(arg)(arg)
-    types=f"l{len(arg)}"
+    if type(arg) in scalers:
+        return scalers[type(arg)], arg
+    x = type(arg)(arg)
+    types = f"l{len(x)}"
     args=()
     while len(x)>0:
         t=type(x[0])
@@ -181,10 +183,10 @@ def ToBQNList(pyList:list[str]):
 
 class CreateComm:
 
-    def __init__(self,id="Default",pathToBQN=None):
+    def __init__(self,id="Default",pathToBQNScript=None):
         self.commPath="comm/"+id
-        if pathToBQN:
-            subprocess.Popen(["BQN",pathToBQN])
+        if pathToBQNScript:
+            subprocess.Popen(["bqn",pathToBQNScript])
 
     def SendMsg(self,msg):
         path=f"{self.commPath}/msgFromPy{len(os.listdir(self.commPath))}.txt"

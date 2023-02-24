@@ -19,16 +19,3 @@ Python:
 Bugs:
     For unknown reasons, when running the bqn code using Code Runner vs-code extention, the Popen function in BQN.py breaks. running from terminal works.
     •Show breaks a lot of things in the BQN function in BQN.py. I need to switch off of using std-out as output for python side to get as input.
-    When passing through the bqn side, the array tends to get transposed, probably due to the IntoMediary function on the BQN side.
-    
-    this test case doesn't output a string back, instead giving a tuple.
-    
-    # Python side:
-    comm.SendMsg("Hellooo")
-    print(comm.GetMsg(1))
-
-    # BQN side:
-    ⟨CreateComm, IntoMediary⟩←•Import"fns.bqn"
-    comm←CreateComm"discBot"
-    # comm.CleanMsgs@
-    {𝕊: comm.SendMsg 1+comm.GetMsg 1}•_while_ 1 @

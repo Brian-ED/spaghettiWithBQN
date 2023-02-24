@@ -5,8 +5,8 @@ comm.CleanMsgs@
 
 conds←[
     0 # comm.sendMsg
-    1 # IntoMediary
-    1 # IntoMediary⁼
+    0 # IntoMediary
+    0 # IntoMediary⁼
 ]
 
 testArrays←⟨
@@ -22,7 +22,7 @@ testArrays←⟨
   !⟨"s"⋄"hellooo" ⟩≡IntoMediary "hellooo"
   !(1⊑testArrays)  ≡IntoMediary 0⊑testArrays
 }
-{𝕊: !testArrays⊑⊸≡IntoMediary⁼ ⟨"l3l4 3ccccccccccccl2 3nnnnnnl5ccl3sl2nnnnl3ccc","t","h","i","s","i","s"," ","a","t","e","s","t","nan","inf","-inf","4","5","6","a","b","nested","3","2","1","2","s","u","m"⟩
-    •Show IntoMediary⁼ ⟨"s","abc"⟩
+{𝕊: !(⊑testArrays)≡○•Repr IntoMediary⁼ 1⊑testArrays  # repr used because ≢˜0÷0, but ≡○•Reor˜0÷0
+    !"abc"≡IntoMediary⁼ ⟨"s","abc"⟩
 }
 ⟩

@@ -3,15 +3,15 @@ from funOps import *
 
 # Switches to turn on/off tests
 tests={
-    'BQN'               :0,
-    'BQNfn'             :0,
-    'PrefixedInteger'   :0,
-    'CollapseInts'      :0,
-    'Handler'           :0,
-    'fromMediary'       :0,
-    'PyToMediary'       :0,
-    'types'             :0,
-    'communication'     :0,
+    'BQN'               :1,
+    'BQNfn'             :1,
+    'PrefixedInteger'   :1,
+    'CollapseInts'      :1,
+    'Handler'           :1,
+    'fromMediary'       :1,
+    'PyToMediary'       :1,
+    'types'             :1,
+    'communication'     :1,
 }
 
 
