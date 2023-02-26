@@ -1,0 +1,89 @@
+⟨"l6l2ssl2ssl2ssl2ssl2ssl2ss","
+<li id=""menu-item-2341"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-2341""><a href=""https://demo.intranet.fo/moguligir-kundar/"">Møguligar verkætlanir</a></li>
+<li id=""menu-item-151"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-151""><a href=""https://demo.intranet.fo/i-gerd/"">Verkætlanir</a></li>
+<li id=""menu-item-14853"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-14853""><a href=""https://demo.intranet.fo/bilar/"">Bilar</a></li>
+","
+","
+<li id=""menu-item-7451"" class=""menu-item-send-bod menu-item menu-item-type-post_type menu-item-object-page menu-item-7451""><a href=""https://demo.intranet.fo/messages/"">Send boð</a></li>
+<li id=""menu-item-3406"" class=""menu-item-skjol menu-item menu-item-type-post_type menu-item-object-page menu-item-3406""><a href=""https://demo.intranet.fo/skjalagoymsla/"">Skjøl</a></li>
+<li id=""menu-item-143"" class=""menu-item-leidslukunning menu-item menu-item-type-post_type menu-item-object-page menu-item-143""><a href=""https://demo.intranet.fo/leidslukunning/"">Kunning</a></li>
+<li id=""menu-item-10647"" class=""menu-item-okkaramillum menu-item menu-item-type-post_type menu-item-object-page menu-item-10647""><a href=""https://demo.intranet.fo/info2/"">Okkara millum</a></li>
+<li id=""menu-item-7949"" class=""menu-item-tilfeingi menu-item menu-item-type-post_type menu-item-object-page menu-item-7949""><a href=""https://demo.intranet.fo/ressources/"">Verkstaðs planlegging</a></li>
+<li id=""menu-item-2342"" class=""menu-item-toki menu-item menu-item-type-post_type menu-item-object-page menu-item-2342""><a href=""https://demo.intranet.fo/toki/"">Arbeiðsstøða</a></li>
+<li id=""menu-item-146"" class=""menu-item-send-sms menu-item menu-item-type-post_type menu-item-object-page menu-item-146""><a href=""https://demo.intranet.fo/send-sms/"">Send SMS</a></li>
+<li id=""menu-item-4728"" class=""menu-item-smakeyp menu-item menu-item-type-post_type menu-item-object-page menu-item-4728""><a href=""https://demo.intranet.fo/smakeyp/"">Smákeyp</a></li>
+<li id=""menu-item-4517"" class=""menu-item-ambod menu-item menu-item-type-post_type menu-item-object-page menu-item-4517""><a href=""https://demo.intranet.fo/ambod/"">Amboð</a></li>
+<li id=""menu-item-8216"" class=""menu-item-telefonbod menu-item menu-item-type-post_type menu-item-object-page menu-item-8216""><a href=""https://demo.intranet.fo/telefonbod/"">Telefonboð</a></li>
+<li id=""menu-item-11705"" class=""menu-item-kundar menu-item menu-item-type-post_type menu-item-object-page menu-item-11705""><a href=""https://demo.intranet.fo/kundatelefonbok/"">Kundar</a></li>
+<li id=""menu-item-8217"" class=""menu-item-utlegg menu-item menu-item-type-post_type menu-item-object-page menu-item-8217""><a href=""https://demo.intranet.fo/lagtut/"">Lagt út</a></li>
+<li id=""menu-item-8218"" class=""menu-item-biluppg menu-item menu-item-type-post_type menu-item-object-page menu-item-8218""><a href=""https://demo.intranet.fo/biluppgavur/"">Biluppgávur</a></li>
+<li id=""menu-item-8352"" class=""menu-item-poll menu-item menu-item-type-post_type menu-item-object-page menu-item-8352""><a href=""https://demo.intranet.fo/poll-answer/"">Spurnarkanning</a></li>
+<li id=""menu-item-8922"" class=""menu-item-faktura menu-item menu-item-type-post_type menu-item-object-page menu-item-8922""><a href=""https://demo.intranet.fo/invoice/"">Faktura-góðkenning</a></li>
+<li id=""menu-item-10688"" class=""menu-item-hugskotskassi menu-item menu-item-type-post_type menu-item-object-page menu-item-10688""><a href=""https://demo.intranet.fo/suggestion/"">Hugskot</a></li>
+<li id=""menu-item-11693"" class=""menu-item-fundarholi menu-item menu-item-type-post_type menu-item-object-page menu-item-11693""><a href=""https://demo.intranet.fo/kalendarar/"">Kalendarar</a></li>
+<li id=""menu-item-12154"" class=""menu-item-noticesafety menu-item menu-item-type-post_type menu-item-object-page menu-item-12154""><a href=""https://demo.intranet.fo/reporting/"">HTU</a></li>
+<li id=""menu-item-14846"" class=""menu-item-matarskipan menu-item menu-item-type-post_type menu-item-object-page menu-item-14846""><a href=""https://demo.intranet.fo/matarskra/"">Matarskra</a></li>
+<li id=""menu-item-14861"" class=""menu-item-tilfeingi menu-item menu-item-type-post_type menu-item-object-page menu-item-14861""><a href=""https://demo.intranet.fo/holiday/"">Feriu kalendari</a></li>
+","
+","
+<li class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-2341""><a href=""https://demo.intranet.fo/moguligir-kundar/"">Møguligar verkætlanir</a></li>
+<li class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-151""><a href=""https://demo.intranet.fo/i-gerd/"">Verkætlanir</a></li>
+<li class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-14853""><a href=""https://demo.intranet.fo/bilar/"">Bilar</a></li>
+","
+","
+<li id=""menu-item-5990"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-5990""><a href=""https://demo.intranet.fo/bookings/"">Hotelbíleggingar</a></li>
+<li id=""menu-item-1251"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-1251""><a href=""https://demo.intranet.fo/starvsfolk/"">Starvsfólk</a></li>
+<li id=""menu-item-1255"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-1255""><a href=""https://demo.intranet.fo/loyniord-hald-blod-o-a/"">Loyniorð</a></li>
+<li id=""menu-item-8224"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8224""><a href=""https://demo.intranet.fo/kundatelefonbok/"">Kundayvirlit</a></li>
+<li id=""menu-item-8146"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8146""><a href=""https://demo.intranet.fo/poll/"">Poll</a></li>
+<li id=""menu-item-1713"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-1713""><a href=""https://demo.intranet.fo/brukarar/"">Brúkarar</a></li>
+<li id=""menu-item-5311"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-5311""><a href=""https://demo.intranet.fo/bolkar/"">Bólkar</a></li>
+<li id=""menu-item-5233"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-5233""><a href=""https://demo.intranet.fo/el-skap/"">Útleigan EL-skáp</a></li>
+<li id=""menu-item-3957"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-3957""><a href=""https://demo.intranet.fo/sms-hagtol/"">SMS hagtøl</a></li>
+<li id=""menu-item-4397"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-4397""><a href=""https://demo.intranet.fo/faktura-godkenning/"">Faktura góðkenning</a></li>
+<li id=""menu-item-4737"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-4737""><a href=""https://demo.intranet.fo/bilegging/"">Vørubíleggingar</a></li>
+<li id=""menu-item-7787"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-7787""><a href=""https://demo.intranet.fo/hop-bolkar/"">Hóp bólkar</a></li>
+<li id=""menu-item-7860"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-7860""><a href=""https://demo.intranet.fo/ressources2/"">Tilfeingi2</a></li>
+<li id=""menu-item-7861"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-7861""><a href=""https://demo.intranet.fo/staff-statusses/"">Tilfeingi støður starvsfólk</a></li>
+<li id=""menu-item-7862"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-7862""><a href=""https://demo.intranet.fo/ressources-statusses/"">Tilfeingi støður</a></li>
+<li id=""menu-item-7863"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-7863""><a href=""https://demo.intranet.fo/ressources-types/"">Tilfeingi sløg</a></li>
+<li id=""menu-item-7864"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-7864""><a href=""https://demo.intranet.fo/ressources-priorities/"">Tilfeingi raðfestingar</a></li>
+<li id=""menu-item-8210"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8210""><a href=""https://demo.intranet.fo/notice_type/"">Fráboðan slag</a></li>
+<li id=""menu-item-10252"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-10252""><a href=""https://demo.intranet.fo/notice_place/"">Fráboðan stað</a></li>
+<li id=""menu-item-8351"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8351""><a href=""https://demo.intranet.fo/kalendarar/"">Kalendarar</a></li>
+<li id=""menu-item-8460"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8460""><a href=""https://demo.intranet.fo/fravera/"">Frávera</a></li>
+<li id=""menu-item-8612"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8612""><a href=""https://demo.intranet.fo/rotas/"">Vaktplan</a></li>
+<li id=""menu-item-8817"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8817""><a href=""https://demo.intranet.fo/timeregister/"">Tíma skráseting</a></li>
+<li id=""menu-item-8874"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8874""><a href=""https://demo.intranet.fo/ressources-management/"">Resursu umsiting</a></li>
+<li id=""menu-item-8923"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8923""><a href=""https://demo.intranet.fo/invoice-user-2-group/"">Fakt. Undirdeildir</a></li>
+<li id=""menu-item-8924"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8924""><a href=""https://demo.intranet.fo/invoice-sub2group/"">Fakt. Deildir</a></li>
+<li id=""menu-item-9985"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-9985""><a href=""https://demo.intranet.fo/crew-signon/"">Mynstring</a></li>
+<li id=""menu-item-10080"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-10080""><a href=""https://demo.intranet.fo/brukarar-extended/"">Starvsfólk útbygt</a></li>
+<li id=""menu-item-10614"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-10614""><a href=""https://demo.intranet.fo/invoice-accounts/"">Bókhalds-kontor</a></li>
+<li id=""menu-item-10691"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-10691""><a href=""https://demo.intranet.fo/suggestion_type/"">Hugskot slag</a></li>
+<li id=""menu-item-10694"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-10694""><a href=""https://demo.intranet.fo/suggestion_place/"">Hugskot stað</a></li>
+<li id=""menu-item-14764"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-14764""><a href=""https://demo.intranet.fo/rotas/"">Vaktplan</a></li>
+<li id=""menu-item-14852"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-14852""><a href=""https://demo.intranet.fo/smakeyp/"">Smákeyp</a></li>
+<li id=""menu-item-14859"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-14859""><a href=""https://demo.intranet.fo/todos/"">Uppgávur</a></li>
+","
+","
+<li id=""menu-item-1261"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-1261""><a href=""https://demo.intranet.fo/gjord-arbeidi/"">Lidnar verkætlanir</a></li>
+<li id=""menu-item-1262"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-1262""><a href=""https://demo.intranet.fo/tododone/"">Avgreidd At gera</a></li>
+<li id=""menu-item-1726"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-1726""><a href=""https://demo.intranet.fo/avgreidd-bod/"">Avgreidd boð</a></li>
+<li id=""menu-item-4247"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-4247""><a href=""https://demo.intranet.fo/telefonboddone/"">Avgreidd telefonboð</a></li>
+<li id=""menu-item-4740"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-4740""><a href=""https://demo.intranet.fo/smakeypdone/"">Avgreidd smákeyp</a></li>
+<li id=""menu-item-4741"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-4741""><a href=""https://demo.intranet.fo/bileggingdone/"">Avgreiddar vørubíleggingar</a></li>
+<li id=""menu-item-4742"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-4742""><a href=""https://demo.intranet.fo/biluppgavurdone/"">Avgreiddar biluppgávur</a></li>
+<li id=""menu-item-6224"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-6224""><a href=""https://demo.intranet.fo/lagtutdone/"">Avgreidd útlegg</a></li>
+<li id=""menu-item-8214"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8214""><a href=""https://demo.intranet.fo/notice_done/"">Avgreitt Fráboðan</a></li>
+<li id=""menu-item-8963"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-8963""><a href=""https://demo.intranet.fo/invoice-payed/"">Avgreiddir fakturar</a></li>
+<li id=""menu-item-10697"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-10697""><a href=""https://demo.intranet.fo/suggestion_done/"">Avgreidd hugskot</a></li>
+<li id=""menu-item-14863"" class=""menu-item menu-item-type-post_type menu-item-object-page menu-item-14863""><a href=""https://demo.intranet.fo/fundarfrasagnir/"">Fundarfrásagnir</a></li>
+","
+","
+<li id=""menu-item-1265"" class=""menu-item menu-item-type-custom menu-item-object-custom menu-item-1265""><a target=""_blank"" rel=""noopener"" href=""http://calculator-1.com/"">Roknimaskina</a></li>
+<li id=""menu-item-1266"" class=""menu-item menu-item-type-custom menu-item-object-custom menu-item-1266""><a target=""_blank"" rel=""noopener"" href=""http://valutaomregneren.dk/"">Valutaumroknari</a></li>
+<li id=""menu-item-1267"" class=""menu-item menu-item-type-custom menu-item-object-custom menu-item-1267""><a target=""_blank"" rel=""noopener"" href=""http://sprotin.fo/?p=dictionaries&amp;_SearchFor=&amp;_SearchDescription=0&amp;_DictionaryId=1&amp;_DictionaryPage=1"">Sprotin</a></li>
+<li id=""menu-item-4393"" class=""menu-item menu-item-type-custom menu-item-object-custom menu-item-4393""><a target=""_blank"" rel=""noopener"" href=""http://nr.fo/"">Nr.fo</a></li>
+","
+"⟩
