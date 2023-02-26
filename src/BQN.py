@@ -7,21 +7,22 @@ from typing import Any, Callable, Union
 import numpy as np
 from time import sleep
 
-pathToFile='/'.join('\\'.join(__file__.split('/')).split('\\')[:-1])+'/'
+# File path excluding filename
+pathToFile = '/'.join(__file__.replace("\\","/").split('/')[:-1])+'/'
 
 class char:
-    def __init__(self,character:str):
-        if len(character)!=1:
-            raise Exception(f'Invalid length for character: "{character}"')
-        self.character=character
+    def __init__(self, character:str):
+        if len(character) != 1 or type(character) != str:
+            raise Exception(f'Only strings of length 1 are valid characters. not: "{character}"')
+        self.character = character
 
-    __str__ =lambda s:s.character
-    __repr__=lambda s:f"char('{s.character}')"
+    __str__  = lambda s:s.character
+    __repr__ = lambda s:f"char('{s.character}')"
     def __eq__(self, __o: object) -> bool:
-        return self.character==str(__o)
+        return self.character == str(__o)
 
 def BQN(*args:str)->Any:
-    process = subprocess.Popen(["BQN",pathToFile+"main.bqn",*args], stdout=subprocess.PIPE,text=True)
+    process = subprocess.Popen(["BQN", pathToFile+"main.bqn", *args], stdout=subprocess.PIPE,text=True)
     output, error = process.communicate()
     if error: raise Exception('BQN ERROR: '+error)
     return Handler(eval(output))
@@ -32,7 +33,7 @@ def BQNfn(bqnFunc:str)->Callable[[Any, Any], Any]:
     return f
 
 def BQNEval(arg:str)->Any:
-    process = subprocess.Popen(["BQN", pathToFile+"main.bqn",arg], stdout=subprocess.PIPE,text=True)
+    process = subprocess.Popen(["BQN", pathToFile+"main.bqn", arg], stdout=subprocess.PIPE,text=True)
     output, error = process.communicate()
     if error: raise Exception(error)
     return Handler(eval(output))
@@ -202,7 +203,7 @@ class CreateComm:
         if not any(m):
             raise Exception("No msg found. Please do 'GetMsg 1' if expected to wait for msg")
         file=self.commPath+'/'+sorted([j for i,j in zip(m, os.listdir(self.commPath)) if i])[0]
-        with open(file) as f:
+        with open(file, encoding="utf-8") as f:
             r=Handler(eval(f.read()))
         os.remove(file)
         return r
@@ -233,5 +234,5 @@ class CreateComm:
         availableActions="exec","value"
         if action not in availableActions:
             raise Exception(f"The action was not recognized.\nValid: {availableActions}\nInvalid: {action}")
-        with open(action+'.bqn', 'w') as fp:
+        with open(action+'.bqn', 'w', encoding="utf-8") as fp:
             fp.write(msg)

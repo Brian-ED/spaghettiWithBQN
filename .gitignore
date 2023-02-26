@@ -1,4 +1,4 @@
-src/__pycache__
+src/_*
 
 # comm is used for communication between python and bqn
 src/comm/*

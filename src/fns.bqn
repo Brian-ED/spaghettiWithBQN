@@ -4,7 +4,6 @@ ToPyTuple ⇐{«∾1⌽¨""","""⊸∾⟜∾¨"\"""⊸(⊑⊐)◶"\\"‿"\"""‿
 Split ⇐(⊢-˜+`×¬)∘=⊔⊢
 
 NN ← (>⟜«0⊸≤) / 0(0⊸≤××⟜10⊸+)`⊢
-# General numbers recognize digits and eE.¯-π∞ (mild extension of BQN) by Marshall
 
 ReplaceAll ⇐ { ⟨old,new⟩ 𝕊 str:
   !new≠⊸≡l←≠old
@@ -16,6 +15,7 @@ ReplaceAll ⇐ { ⟨old,new⟩ 𝕊 str:
   ⍋⊸⊏´ keep ∾¨ insert
 }
 
+# General numbers recognize digits and eE.¯-π∞ (mild extension of BQN) by Marshall
 # Modified ToNums from Marshals string lib.
 # Now works on True, False, and nans from python
 ToNums ⇐ ({
