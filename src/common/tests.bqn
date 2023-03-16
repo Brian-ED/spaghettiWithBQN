@@ -22,7 +22,7 @@ testArrays←⟨
   !⟨"s"⋄"hellooo" ⟩≡IntoMediary "hellooo"
   !(1⊑testArrays)  ≡IntoMediary 0⊑testArrays
 }
-{𝕊: !(⊑testArrays)≡○•Repr IntoMediary⁼ 1⊑testArrays  # repr used because ≢˜0÷0, but ≡○•Reor˜0÷0
+{𝕊: !(⊑testArrays)≡○•Repr IntoMediary⁼ 1⊑testArrays  # repr used because ≢˜0÷0, but ≡○•Repr˜0÷0
     !"abc"≡IntoMediary⁼ ⟨"s","abc"⟩
 }
 ⟩

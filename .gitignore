@@ -1,5 +1,3 @@
-src/_*
-
 # comm is used for communication between python and bqn
 src/comm/*
 
